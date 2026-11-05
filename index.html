@@ -973,7 +973,7 @@ mol.elements.forEach((d) => { const k = elKey(d); counts[k] = (counts[k] || 0) +
 S.elems = mol.elements.map((def, idx) => {
 const k = elKey(def);
 seen[k] = (seen[k] || 0) + 1;
-return { def, idx, num: counts[k] > 1 ? seen[k] : 0, visible: false, on: atomsOn(def, mol.atoms), objs: [], anchor: [0, 0, 0], lbl: null };
+return { def, idx, num: counts[k] > 1 ? seen[k] : 0, visible: true, on: atomsOn(def, mol.atoms), objs: [], anchor: [0, 0, 0], lbl: null };
 });
 const pi = S.elems.findIndex((e) => e.def.principal);
 S.selected = pi >= 0 ? pi : 0;
