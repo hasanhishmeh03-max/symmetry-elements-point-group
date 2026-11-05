@@ -70,7 +70,7 @@ button { font: inherit; color: inherit; }
 .sym { font-family: var(--font-sym); font-weight: 500; white-space: nowrap; direction: ltr; unicode-bidi: isolate; }
 .sym i { font-style: italic; }
 .sym sub { font-size: .7em; line-height: 0; vertical-align: -.28em; font-style: normal; margin-left: .04em; }
-.top { max-width: 1440px; margin: 0 auto; padding: 22px 20px 6px; display: grid; gap: 12px; }
+.top { max-width: none; margin: 0; padding: 22px 20px 6px; display: grid; gap: 12px; }
 .brand { display: grid; gap: 2px; }
 .title-row { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 22px; }
 .credit {
@@ -138,8 +138,8 @@ transition: background-color .15s, border-color .15s, color .15s;
 .tab-n { font-size: .8rem; line-height: 1.35; color: var(--muted); }
 .tab[aria-selected="true"] .tab-n { color: color-mix(in srgb, var(--surface) 72%, transparent); }
 .layout {
-max-width: 1440px;
-margin: 0 auto;
+max-width: none;
+margin: 0;
 padding: 0 16px 40px;
 display: grid;
 grid-template-areas: "stage" "panel";
