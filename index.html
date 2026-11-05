@@ -113,6 +113,8 @@ pointer-events: none;
 mask-image: linear-gradient(to bottom, transparent 46%, #000 100%);
 }
 .subtitle { margin: 0; max-width: 68ch; color: var(--muted); font-size: .95rem; }
+.visits { display: inline-flex; align-items: center; gap: 6px; margin: 4px 0 0; color: var(--muted); font-size: .85rem; font-variant-numeric: tabular-nums; }
+.visits svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 @media (max-width: 560px) {
 .title::after { display: none; }
 }
@@ -354,6 +356,7 @@ body.busy .op { opacity: .45; pointer-events: none; }
 <p class="credit">إعداد: حسن أبو حشمة</p>
 </div>
 <p class="subtitle">أمثلة محاضرة عناصر التماثل في مساق الطرق الفيزيوكيميائية في الكيمياء غير العضوية. لكل جزيء شكل ثلاثي الأبعاد تديره بيدك، وكل عملية تماثل تُطبَّق عليه أمامك.</p>
+<p class="visits" id="visits" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="2.8"/></svg>عدد الزيارات: <bdi id="visitsN"></bdi></p>
 </div>
 <nav class="tabs" id="tabs" role="tablist" aria-label="اختر الجزيء"></nav>
 </header>
@@ -1499,6 +1502,15 @@ canvas.addEventListener('webglcontextlost', (ev) => { ev.preventDefault(); prog 
 } else showNoGL();
 loadMolecule(molFromHash() || MOLS[0], false);
 requestAnimationFrame(loop);
+loadVisits();
+}
+function loadVisits() {
+const el = document.getElementById('visits');
+if (!el || !window.fetch) return;
+fetch('https://hasan-hishmeh.goatcounter.com/counter/TOTAL.json')
+.then((r) => (r.ok ? r.json() : null))
+.then((d) => { if (d && d.count) { document.getElementById('visitsN').textContent = d.count; el.hidden = false; } })
+.catch(() => {});
 }
 const hot = window.claude && window.claude.hot;
 if (hot && typeof hot.snapshot === 'function') hot.snapshot(() => ({ labels: S.labels, auto: S.auto, xray: S.xray }));
@@ -1506,5 +1518,6 @@ if (hot && typeof hot.ready === 'function') hot.ready(boot);
 else boot((hot && hot.data) || {});
 })();
 </script>
+<script data-goatcounter="https://hasan-hishmeh.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body>
 </html>
