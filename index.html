@@ -1,0 +1,1503 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Symmetry Elements &amp; Point Group · Hasan Hishmeh</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600&amp;family=Reem+Kufi:wght@500;600&amp;family=STIX+Two+Text:ital,wght@0,500;1,500&amp;display=swap">
+<style>
+:root {
+--bg: #ECF0F2;
+--surface: #FFFFFF;
+--ink: #13212C;
+--muted: #576875;
+--line: #D1DAE0;
+--stage-a: #FFFFFF;
+--stage-b: #DDE5EA;
+--c-cn: #2B63D9;
+--c-sn: #0B8F84;
+--c-sh: #D98200;
+--c-sv: #7546D8;
+--c-sd: #CC2F67;
+--c-i: #C62828;
+--c-e: #576875;
+--plane-alpha: 0.15;
+--font-display: "Reem Kufi", "IBM Plex Sans Arabic", "Noto Kufi Arabic", "Segoe UI", Tahoma, sans-serif;
+--font-body: "IBM Plex Sans Arabic", "Noto Sans Arabic", "Segoe UI", Tahoma, sans-serif;
+--font-sym: "STIX Two Text", "Cambria Math", Cambria, "Times New Roman", serif;
+color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+:root:not([data-theme="light"]) {
+--bg: #0C1318; --surface: #141E26; --ink: #E3EBF0; --muted: #8FA1AE; --line: #25333D;
+--stage-a: #1B2833; --stage-b: #0A1015;
+--c-cn: #6F9BFF; --c-sn: #33C2B3; --c-sh: #FFB13D; --c-sv: #A88BFF; --c-sd: #FF6D9F; --c-i: #FF6A6A; --c-e: #8FA1AE;
+--plane-alpha: 0.2;
+color-scheme: dark;
+}
+}
+:root[data-theme="dark"] {
+--bg: #0C1318; --surface: #141E26; --ink: #E3EBF0; --muted: #8FA1AE; --line: #25333D;
+--stage-a: #1B2833; --stage-b: #0A1015;
+--c-cn: #6F9BFF; --c-sn: #33C2B3; --c-sh: #FFB13D; --c-sv: #A88BFF; --c-sd: #FF6D9F; --c-i: #FF6A6A; --c-e: #8FA1AE;
+--plane-alpha: 0.2;
+color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+margin: 0;
+background: var(--bg);
+color: var(--ink);
+font-family: var(--font-body);
+font-size: 16px;
+line-height: 1.7;
+}
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--c-cn); outline-offset: 2px; }
+.sym { font-family: var(--font-sym); font-weight: 500; white-space: nowrap; direction: ltr; unicode-bidi: isolate; }
+.sym i { font-style: italic; }
+.sym sub { font-size: .7em; line-height: 0; vertical-align: -.28em; font-style: normal; margin-left: .04em; }
+.top { max-width: 1440px; margin: 0 auto; padding: 22px 20px 6px; display: grid; gap: 12px; }
+.brand { display: grid; gap: 2px; }
+.title-row { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 22px; }
+.credit {
+margin: 0 0 .9em;
+padding-inline-start: 12px;
+border-inline-start: 2px solid var(--c-sh);
+font-family: var(--font-display);
+font-weight: 500;
+font-size: clamp(1rem, .9rem + .45vw, 1.2rem);
+line-height: 1.4;
+color: var(--muted);
+}
+.title {
+position: relative;
+width: fit-content;
+margin: 0 0 .62em;
+font-family: var(--font-display);
+font-weight: 600;
+font-size: clamp(1.75rem, 1.2rem + 2.1vw, 2.65rem);
+line-height: 1.2;
+}
+.title::before {
+content: "";
+position: absolute;
+inset-inline: -8px;
+top: calc(100% + .03em);
+height: 1.5px;
+background: linear-gradient(90deg, transparent, var(--c-sh) 14%, var(--c-sh) 86%, transparent);
+}
+.title::after {
+content: attr(data-mirror);
+position: absolute;
+inset-inline: 0;
+top: calc(100% + .07em);
+white-space: nowrap;
+transform: scaleY(-1);
+opacity: .17;
+pointer-events: none;
+-webkit-mask-image: linear-gradient(to bottom, transparent 46%, #000 100%);
+mask-image: linear-gradient(to bottom, transparent 46%, #000 100%);
+}
+.subtitle { margin: 0; max-width: 68ch; color: var(--muted); font-size: .95rem; }
+@media (max-width: 560px) {
+.title::after { display: none; }
+}
+.tabs { display: flex; gap: 8px; overflow-x: auto; padding: 2px 2px 8px; scrollbar-width: none; }
+.tabs::-webkit-scrollbar { display: none; }
+.tab {
+flex: 0 0 auto;
+display: grid;
+justify-items: start;
+min-width: 104px;
+padding: 7px 14px 8px;
+border: 1px solid var(--line);
+border-radius: 12px;
+background: var(--surface);
+text-align: start;
+cursor: pointer;
+transition: background-color .15s, border-color .15s, color .15s;
+}
+.tab:hover { border-color: var(--muted); }
+.tab[aria-selected="true"] { background: var(--ink); border-color: var(--ink); color: var(--surface); }
+.tab-f { font-family: var(--font-sym); font-size: 1.3rem; line-height: 1.3; direction: ltr; unicode-bidi: isolate; }
+.tab-f sub, .formula sub { font-size: .66em; line-height: 0; vertical-align: -.24em; }
+.tab-n { font-size: .8rem; line-height: 1.35; color: var(--muted); }
+.tab[aria-selected="true"] .tab-n { color: color-mix(in srgb, var(--surface) 72%, transparent); }
+.layout {
+max-width: 1440px;
+margin: 0 auto;
+padding: 0 16px 40px;
+display: grid;
+grid-template-areas: "stage" "panel";
+gap: 14px;
+}
+.stage {
+grid-area: stage;
+position: sticky;
+top: 0;
+z-index: 5;
+height: clamp(300px, 52vh, 520px);
+height: clamp(300px, 52svh, 520px);
+padding: 6px 0 8px;
+background: var(--bg);
+}
+.panel { grid-area: panel; display: grid; gap: 14px; align-content: start; min-width: 0; }
+@media (min-width: 980px) {
+.layout { grid-template-columns: minmax(360px, 420px) minmax(0, 1fr); grid-template-areas: "panel stage"; gap: 20px; padding: 0 20px 48px; }
+.stage { top: 14px; height: clamp(460px, calc(100vh - 28px), 840px); height: clamp(460px, calc(100svh - 28px), 840px); padding: 0; }
+}
+.viewer {
+position: relative;
+height: 100%;
+overflow: hidden;
+border: 1px solid var(--line);
+border-radius: 18px;
+background: radial-gradient(130% 95% at 50% 38%, var(--stage-a) 0%, var(--stage-b) 80%);
+touch-action: none;
+-webkit-user-select: none;
+user-select: none;
+outline: none;
+}
+.viewer:focus-visible { box-shadow: 0 0 0 2px var(--c-cn); }
+#gl { display: block; width: 100%; height: 100%; cursor: grab; }
+#gl:active { cursor: grabbing; }
+.labels { position: absolute; inset: 0; overflow: hidden; pointer-events: none; direction: ltr; }
+.lbl { position: absolute; left: 0; top: 0; white-space: nowrap; will-change: transform; }
+.lbl.atom {
+padding: 3px 5px 2px;
+border: 1px solid color-mix(in srgb, var(--ink) 16%, transparent);
+border-radius: 6px;
+background: color-mix(in srgb, var(--surface) 82%, transparent);
+font: 600 11.5px/1 var(--font-body);
+color: var(--ink);
+}
+.lbl.elem {
+padding: 2px 4px;
+font: 500 17px/1 var(--font-sym);
+color: var(--c);
+text-shadow: 0 0 3px var(--stage-a), 0 0 3px var(--stage-a), 0 0 7px var(--stage-a);
+}
+.lbl.elem i { font-style: italic; }
+.lbl.elem sub { font-size: .7em; vertical-align: -.25em; line-height: 0; }
+.lbl.elem small { margin-left: 2px; font: 600 10px/1 var(--font-body); color: var(--muted); }
+.lbl.elem.center { margin: -15px 0 0 20px; }
+.toolbar { position: absolute; top: 10px; inset-inline: 10px; display: flex; flex-wrap: wrap; gap: 6px; pointer-events: none; }
+.tool[data-act="xray"] { margin-inline-start: auto; }
+.tool {
+display: inline-flex;
+align-items: center;
+gap: 6px;
+height: 34px;
+padding: 0 10px;
+border: 1px solid var(--line);
+border-radius: 10px;
+background: color-mix(in srgb, var(--surface) 88%, transparent);
+-webkit-backdrop-filter: blur(6px);
+backdrop-filter: blur(6px);
+font-size: .82rem;
+cursor: pointer;
+pointer-events: auto;
+}
+.tool:hover { border-color: var(--muted); }
+.tool[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--surface); }
+.tool svg, .vis svg, .ghost-btn svg { width: 17px; height: 17px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.viewer { container-type: inline-size; }
+@container (max-width: 820px) {
+.tool { width: 36px; padding: 0; justify-content: center; }
+.tool span { display: none; }
+}
+.caption {
+position: absolute;
+inset-inline: 12px;
+bottom: 12px;
+max-width: 620px;
+margin-inline: auto;
+padding: 8px 14px;
+border: 1px solid var(--line);
+border-radius: 12px;
+background: color-mix(in srgb, var(--surface) 92%, transparent);
+font-size: .95rem;
+line-height: 1.6;
+text-align: center;
+opacity: 0;
+transform: translateY(6px);
+transition: opacity .2s, transform .2s;
+pointer-events: none;
+}
+.caption.show { opacity: 1; transform: none; }
+.hint { position: absolute; bottom: 12px; inset-inline-end: 14px; max-width: 70%; font-size: .8rem; color: var(--muted); transition: opacity .3s; pointer-events: none; }
+.hint.gone { opacity: 0; }
+.nogl { position: absolute; inset: 0; display: grid; place-items: center; padding: 24px; text-align: center; color: var(--muted); }
+.card { padding: 16px; border: 1px solid var(--line); border-radius: 16px; background: var(--surface); }
+.mol-head { display: flex; align-items: center; gap: 14px; }
+.formula { padding: 9px 12px; border-radius: 12px; background: var(--bg); font-family: var(--font-sym); font-size: 2.05rem; line-height: 1; direction: ltr; unicode-bidi: isolate; }
+.mol-name { margin: 0; font-family: var(--font-display); font-weight: 600; font-size: 1.3rem; line-height: 1.35; text-wrap: balance; }
+.mol-sub { margin: 0; color: var(--muted); font-size: .9rem; }
+.pg-line { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; margin-top: 14px; }
+.pg-label { color: var(--muted); font-size: .86rem; }
+.pg-sym { font-size: 1.65rem; line-height: 1.1; }
+.pg-h { color: var(--muted); font-family: var(--font-sym); font-size: 1.05rem; direction: ltr; unicode-bidi: isolate; }
+.ct-wrap { margin-top: 10px; overflow-x: auto; }
+.ct { border-collapse: collapse; direction: ltr; font-family: var(--font-sym); font-size: 1.05rem; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.ct th, .ct td { padding: 5px 9px 6px; border-bottom: 1.5px solid var(--ink); font-weight: 500; text-align: center; }
+.ct th { padding-left: 2px; border-right: 1.5px solid var(--ink); }
+.ct .coef { margin-right: 1px; font-family: var(--font-sym); }
+.ct-cap { margin: 8px 0 0; color: var(--muted); font-size: .82rem; line-height: 1.6; }
+.conf-head { font-family: var(--font-display); font-weight: 500; font-size: 1.02rem; }
+.seg { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 8px; }
+.seg button { display: grid; justify-items: center; gap: 1px; padding: 7px 8px 8px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); cursor: pointer; line-height: 1.4; }
+.seg button[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--surface); }
+.seg small { font-size: .78rem; opacity: .8; }
+.conf-note { margin: 10px 0 0; color: var(--muted); font-size: .86rem; line-height: 1.65; }
+.el-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 12px; }
+.el-head h2 { margin: 0; font-family: var(--font-display); font-weight: 600; font-size: 1.2rem; }
+.bulk { display: flex; gap: 6px; }
+.chip-btn { padding: 3px 11px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); font-size: .82rem; cursor: pointer; }
+.chip-btn:hover { border-color: var(--muted); }
+.fam { display: grid; gap: 6px; margin-top: 16px; }
+.fam h3 { display: flex; align-items: center; gap: 8px; margin: 0; font-family: var(--font-display); font-weight: 500; font-size: 1.02rem; }
+.fam h3 .sym { color: var(--c); font-size: 1.15rem; }
+.fam-en, .h-en { color: var(--muted); font-family: var(--font-body); font-size: .8rem; font-weight: 500; }
+.h-en { margin-inline-start: 6px; }
+.count { padding: 0 8px; border: 1px solid var(--line); border-radius: 999px; color: var(--muted); font-family: var(--font-body); font-size: .76rem; line-height: 1.6; }
+.fam-lead { margin: 0 0 2px; color: var(--muted); font-size: .86rem; line-height: 1.6; }
+.row {
+display: grid;
+grid-template-columns: auto minmax(0, 1fr) auto;
+align-items: center;
+gap: 6px;
+padding: 5px;
+border: 1px solid var(--line);
+border-radius: 12px;
+background: var(--surface);
+}
+.row.sel { border-color: var(--c); box-shadow: inset -3px 0 0 var(--c); }
+.vis { display: grid; place-items: center; width: 34px; height: 34px; border: 1px solid var(--line); border-radius: 9px; background: transparent; color: var(--muted); cursor: pointer; }
+.vis[aria-pressed="true"] { border-color: color-mix(in srgb, var(--c) 50%, var(--line)); background: color-mix(in srgb, var(--c) 11%, transparent); color: var(--c); }
+.vis-ph { width: 34px; height: 34px; display: grid; place-items: center; color: var(--c); }
+.vis-ph svg { width: 10px; height: 10px; fill: currentColor; }
+.name { display: grid; gap: 0; min-width: 0; padding: 3px 6px; border: 0; border-radius: 8px; background: none; text-align: start; cursor: pointer; }
+.name:hover { background: var(--bg); }
+.name.static { cursor: default; }
+.name.static:hover { background: none; }
+.nm { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 8px; }
+.nm .sym { color: var(--c); font-size: 1.15rem; }
+.kind { color: var(--ink); font-size: .84rem; line-height: 1.5; }
+.kind [lang="en"] { color: var(--muted); }
+.num { color: var(--muted); font-size: .74rem; font-weight: 600; }
+.note { color: var(--ink); font-size: .8rem; }
+.note .sym { color: var(--ink); font-size: .95rem; }
+.on { color: var(--muted); font-size: .78rem; line-height: 1.45; }
+.ops { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 4px; }
+.op {
+display: inline-flex;
+align-items: center;
+gap: 5px;
+height: 32px;
+padding: 0 10px 0 8px;
+border: 0;
+border-radius: 9px;
+background: var(--ink);
+color: var(--surface);
+font-size: .98rem;
+cursor: pointer;
+direction: ltr;
+}
+.op svg { width: 11px; height: 11px; fill: currentColor; flex: none; }
+.op:hover { background: color-mix(in srgb, var(--ink) 82%, var(--c, var(--c-cn))); }
+body.busy .op { opacity: .45; pointer-events: none; }
+.info-card { padding-inline-start: 12px; border-inline-start: 3px solid var(--c); }
+.info-top { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; }
+.info-sym { color: var(--c); font-size: 1.7rem; line-height: 1.2; }
+.info-sym .num { margin-inline-start: 4px; }
+.info-names { display: grid; }
+.info-title { font-family: var(--font-display); font-weight: 500; font-size: 1.08rem; line-height: 1.45; }
+.info-en { justify-self: start; color: var(--muted); font-size: .86rem; line-height: 1.4; }
+.info-desc { max-width: 65ch; margin: 6px 0; }
+.info-on { margin: 0 0 10px; color: var(--muted); font-size: .9rem; }
+.info-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+.ghost-btn { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 10px; border: 1px solid var(--line); border-radius: 9px; background: var(--surface); font-size: .86rem; cursor: pointer; }
+.ghost-btn:hover { border-color: var(--muted); }
+.muted { margin: 0; color: var(--muted); }
+.result { display: grid; gap: 6px; margin-top: 14px; padding-top: 12px; border-top: 1px dashed var(--line); font-size: .92rem; }
+.result-title { font-weight: 600; }
+.kv { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 12px; align-items: baseline; }
+.kv .k { color: var(--muted); font-size: .86rem; }
+.mvs { display: inline-flex; flex-wrap: wrap; gap: 4px; }
+.mv { padding: 0 7px; border-radius: 6px; background: var(--bg); font-size: .86rem; white-space: nowrap; }
+.tip { margin: 2px 0 0; color: var(--muted); font-size: .82rem; line-height: 1.6; }
+.howto { margin: 0; padding: 0 4px; color: var(--muted); font-size: .85rem; line-height: 1.7; max-width: 65ch; }
+@media (prefers-reduced-motion: reduce) {
+*, *::before, *::after { transition: none !important; }
+}
+</style>
+</head>
+<body>
+<header class="top">
+<div class="brand">
+<div class="title-row">
+<h1 class="title" lang="en" dir="ltr" data-mirror="Symmetry Elements &amp; Point Group">Symmetry Elements &amp; Point Group</h1>
+<p class="credit">إعداد: حسن أبو حشمة</p>
+</div>
+<p class="subtitle">أمثلة محاضرة عناصر التماثل في مساق الطرق الفيزيوكيميائية في الكيمياء غير العضوية. لكل جزيء شكل ثلاثي الأبعاد تديره بيدك، وكل عملية تماثل تُطبَّق عليه أمامك.</p>
+</div>
+<nav class="tabs" id="tabs" role="tablist" aria-label="اختر الجزيء"></nav>
+</header>
+<main class="layout">
+<section class="stage" aria-label="الشكل ثلاثي الأبعاد">
+<div class="viewer" id="viewer" tabindex="0" aria-label="الشكل ثلاثي الأبعاد. اسحب لتدويره، أو استخدم أسهم لوحة المفاتيح.">
+<canvas id="gl"></canvas>
+<div class="labels" id="labels" aria-hidden="true"></div>
+<div class="toolbar" id="toolbar">
+<button class="tool" type="button" data-act="top" aria-label="من فوق المحور" title="انظر على امتداد المحور الرئيسي"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="2"/></svg><span>من فوق المحور</span></button>
+<button class="tool" type="button" data-act="home" aria-label="المنظر الأصلي" title="ارجع إلى المنظر الأصلي"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 12a7.5 7.5 0 1 0 2.2-5.3"/><path d="M4.5 4.5v4h4"/></svg><span>المنظر الأصلي</span></button>
+<button class="tool" type="button" data-act="labels" aria-pressed="true" aria-label="أرقام الذرات" title="إظهار أو إخفاء أرقام الذرات"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.5 4 7.5 20M16.5 4l-2 16M5 9h15M4 15h15"/></svg><span>الأرقام</span></button>
+<button class="tool" type="button" data-act="xray" aria-pressed="false" aria-label="جزيء شفاف" title="اجعل الذرات شفافة لترى عناصر التماثل داخل الجزيء"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5" stroke-dasharray="3 2.6"/><path d="M12 3.5a8.5 8.5 0 0 1 0 17z" fill="currentColor" opacity=".35" stroke="none"/><path d="M12 3v18"/></svg><span>جزيء شفاف</span></button>
+<button class="tool" type="button" data-act="renumber" aria-label="الترقيم الأصلي" title="أعد كل ذرة إلى موقعها ورقمها الأصليين"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h12l-3.5-3.5M17 17H5l3.5 3.5"/></svg><span>الترقيم الأصلي</span></button>
+<button class="tool" type="button" data-act="auto" aria-pressed="false" aria-label="دوران تلقائي" title="دوران تلقائي بطيء"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 12c0 2.4-3.8 4.4-8.5 4.4S3.5 14.4 3.5 12 7.3 7.6 12 7.6c2.4 0 4.6.5 6.1 1.4"/><path d="M15.4 6.2l2.9 2.8-2.7 2.6"/></svg><span>دوران تلقائي</span></button>
+</div>
+<div class="hint" id="hint">اسحب لتدوير الجزيء، وقرّب بإصبعين أو بعجلة الماوس</div>
+<div class="caption" id="caption" role="status" aria-live="polite"></div>
+</div>
+</section>
+<aside class="panel">
+<section class="card mol-card" id="molCard" aria-label="معلومات الجزيء"></section>
+<section class="card" id="conf" aria-label="هيئة الإيثان" hidden></section>
+<section class="card" id="elements" aria-label="عناصر التماثل"></section>
+<section class="card" id="info" aria-label="العنصر المختار"></section>
+<p class="howto">زر العين يُظهر العنصر في الشكل أو يخفيه، وزر ▶ يطبّق العملية على الجزيء. بعد كل عملية يرجع الشكل مطابقاً لأصله، لكن أرقام الذرات تكشف الذرات التي تبادلت مواقعها. وإذا غطّت الذرات على عنصر ما، استعمل زر «جزيء شفاف».</p>
+</aside>
+</main>
+<script>
+/* Molecule data for the symmetry lab.
+Chemistry frame: z is the principal axis. Units: angstrom. */
+(function (root) {
+'use strict';
+const D = Math.PI / 180;
+const pol = (r, a, z = 0) => [r * Math.cos(a * D), r * Math.sin(a * D), z];
+const dirAt = (a) => [Math.cos(a * D), Math.sin(a * D), 0];
+const planeAt = (a) => [Math.cos((a + 90) * D), Math.sin((a + 90) * D), 0];
+const Z = [0, 0, 1];
+const n3 = (v) => { const l = Math.hypot(v[0], v[1], v[2]); return [v[0] / l, v[1] / l, v[2] / l]; };
+const sy = (l, s = '', p = '') => `<span class="sym"><i>${l}</i>${s ? `<sub>${s}</sub>` : ''}${p}</span>`;
+const atom = (el, label, p) => ({ el, label, p });
+const Cax = (n, dir, desc, o = {}) => ({ fam: 'C', sym: 'C', sub: String(n), prime: o.prime || '', n, dir: n3(dir), ops: o.ops || [n], principal: !!o.principal, desc, note: o.note || '' });
+const Sax = (n, dir, desc, o = {}) => ({ fam: 'S', sym: 'S', sub: String(n), prime: '', n, dir: n3(dir), ops: o.ops || [n], desc, note: o.note || '' });
+const Pl = (sub, normal, desc, o = {}) => ({ fam: 'sigma', sym: 'σ', sub, prime: o.prime || '', normal: n3(normal), desc, note: o.note || '' });
+const Inv = (desc) => ({ fam: 'i', sym: 'i', sub: '', prime: '', desc, note: '' });
+const rBCl = 1.742;
+const bcl3C2 = `يقع على امتداد رابطة B–Cl، وهو عمودي على المحور الرئيسي. الدوران بزاوية 180° يُبقي ذرة Cl الواقعة عليه في مكانها ويبدّل الذرتين الأخريين.`;
+const bcl3Sv = `مستوى رأسي يحتوي المحور الرئيسي ${sy('C', '3')} ورابطة B–Cl واحدة. الانعكاس فيه يُبقي ذرتي B و Cl الواقعتين عليه ويبدّل ذرتي Cl الأخريين.`;
+const bcl3 = {
+id: 'bcl3', tab: 'bcl3', hash: 'bcl3',
+formula: 'BCl<sub>3</sub>', short: 'كلوريد البورون',
+nameAr: 'ثلاثي كلوريد البورون', nameEn: 'Boron trichloride', shapeAr: 'مثلث مستوٍ', shapeEn: 'trigonal planar',
+pg: ['D', '3h'], order: 12,
+classes: [['', 'E'], ['2', 'C', '3'], ['3', 'C', '2'], ['', 'σ', 'h'], ['2', 'S', '3'], ['3', 'σ', 'v']],
+atoms: [atom('B', 'B', [0, 0, 0]), atom('Cl', 'Cl1', pol(rBCl, 90)), atom('Cl', 'Cl2', pol(rBCl, 210)), atom('Cl', 'Cl3', pol(rBCl, 330))],
+bonds: [[0, 1], [0, 2], [0, 3]],
+view: { az: -90, el: 28 },
+elements: [
+Cax(3, Z, `المحور الرئيسي (أعلى رتبة دوران في الجزيء). عمودي على مستوى الجزيء ويمر بذرة البورون. الدوران بزاوية 120° ينقل كل ذرة Cl إلى موقع الذرة التي تليها.`, { principal: true }),
+Cax(2, dirAt(90), bcl3C2), Cax(2, dirAt(210), bcl3C2), Cax(2, dirAt(330), bcl3C2),
+Pl('h', Z, `مستوى عمودي على المحور الرئيسي ${sy('C', '3')}. وهو هنا مستوى الجزيء نفسه، لذلك الانعكاس فيه لا يحرّك أي ذرة.`),
+Pl('v', planeAt(90), bcl3Sv), Pl('v', planeAt(210), bcl3Sv), Pl('v', planeAt(330), bcl3Sv),
+Sax(3, Z, `يقع على امتداد المحور الرئيسي: دوران بزاوية 120° ثم انعكاس في ${sy('σ', 'h')}. وجوده نتيجة طبيعية لوجود ${sy('C', '3')} و ${sy('σ', 'h')} معاً.`),
+],
+};
+const rOH = 0.9572, half = 104.52 / 2 * D;
+const hx = rOH * Math.sin(half), hz = rOH * Math.cos(half);
+const h2o = {
+id: 'h2o', tab: 'h2o', hash: 'h2o',
+formula: 'H<sub>2</sub>O', short: 'الماء',
+nameAr: 'الماء', nameEn: 'Water', shapeAr: 'منحنٍ', shapeEn: 'bent',
+pg: ['C', '2v'], order: 4,
+classes: [['', 'E'], ['', 'C', '2'], ['', 'σ', 'v'], ['', 'σ', 'v', '′']],
+atoms: [atom('O', 'O', [0, 0, hz / 2]), atom('H', 'H1', [hx, 0, -hz / 2]), atom('H', 'H2', [-hx, 0, -hz / 2])],
+bonds: [[0, 1], [0, 2]],
+view: { az: -72, el: 14 },
+elements: [
+Cax(2, Z, `المحور الرئيسي والوحيد. يمر بذرة الأكسجين وينصّف الزاوية H–O–H. الدوران بزاوية 180° يبدّل ذرتي الهيدروجين.`, { principal: true }),
+Pl('v', [0, 1, 0], `هو مستوى الجزيء نفسه، ويحتوي المحور ${sy('C', '2')} والذرات الثلاث، لذلك الانعكاس فيه لا يحرّك أي ذرة.`, { note: 'مستوى الجزيء' }),
+Pl('v', [1, 0, 0], `مستوى عمودي على مستوى الجزيء ويحتوي المحور ${sy('C', '2')}. يمر بذرة الأكسجين فقط، والانعكاس فيه يبدّل H1 و H2.`, { prime: '′', note: 'عمودي على الجزيء' }),
+],
+};
+const rC = 1.397, rH = 1.397 + 1.084;
+const bzAtoms = [];
+for (let k = 0; k < 6; k++) bzAtoms.push(atom('C', `C${k + 1}`, pol(rC, 90 + 60 * k)));
+for (let k = 0; k < 6; k++) bzAtoms.push(atom('H', `H${k + 1}`, pol(rH, 90 + 60 * k)));
+const bzBonds = [];
+for (let k = 0; k < 6; k++) { bzBonds.push([k, (k + 1) % 6]); bzBonds.push([k, k + 6]); }
+const bzC2a = `في مستوى الحلقة، ويمر بذرتي كربون متقابلتين وذرتي الهيدروجين المرتبطتين بهما.`;
+const bzC2b = `في مستوى الحلقة، ويمر بمنتصف رابطتين C–C متقابلتين، ولا يمر بأي ذرة.`;
+const bzSv = `مستوى رأسي يحتوي المحور الرئيسي ومحور ${sy('C', '2', '′')}، أي أنه يمر بذرتين متقابلتين من الحلقة.`;
+const bzSd = `مستوى رأسي يحتوي المحور الرئيسي ومحور ${sy('C', '2', '″')}، أي أنه يمر بمنتصف رابطتين متقابلتين. وينصّف الزاوية بين محوري ${sy('C', '2', '′')} متجاورين، ولهذا يسمى dihedral.`;
+const benzene = {
+id: 'benzene', tab: 'benzene', hash: 'benzene',
+formula: 'C<sub>6</sub>H<sub>6</sub>', short: 'البنزين',
+nameAr: 'البنزين', nameEn: 'Benzene', shapeAr: 'حلقة سداسية مستوية', shapeEn: 'planar hexagon',
+pg: ['D', '6h'], order: 24,
+classes: [['', 'E'], ['2', 'C', '6'], ['2', 'C', '3'], ['', 'C', '2'], ['3', 'C', '2', '′'], ['3', 'C', '2', '″'], ['', 'i'], ['2', 'S', '3'], ['2', 'S', '6'], ['', 'σ', 'h'], ['3', 'σ', 'd'], ['3', 'σ', 'v']],
+atoms: bzAtoms,
+bonds: bzBonds,
+view: { az: -90, el: 30 },
+elements: [
+Cax(6, Z, `المحور الرئيسي، عمودي على الحلقة ويمر بمركزها. الدوران بزاوية 60° يعطي شكلاً مطابقاً، وكذلك 120° و 180°، لذلك يقع ${sy('C', '3')} و ${sy('C', '2')} على نفس الخط.`, { principal: true, ops: [6, 3, 2], note: `ومعه ${sy('C', '3')} و ${sy('C', '2')}` }),
+Cax(2, dirAt(90), bzC2a, { prime: '′' }), Cax(2, dirAt(150), bzC2a, { prime: '′' }), Cax(2, dirAt(210), bzC2a, { prime: '′' }),
+Cax(2, dirAt(0), bzC2b, { prime: '″' }), Cax(2, dirAt(60), bzC2b, { prime: '″' }), Cax(2, dirAt(120), bzC2b, { prime: '″' }),
+Pl('h', Z, `مستوى الحلقة نفسه، وهو عمودي على المحور الرئيسي ${sy('C', '6')}. كل الذرات تقع فيه.`),
+Pl('v', planeAt(90), bzSv), Pl('v', planeAt(150), bzSv), Pl('v', planeAt(210), bzSv),
+Pl('d', planeAt(0), bzSd), Pl('d', planeAt(60), bzSd), Pl('d', planeAt(120), bzSd),
+Inv(`يقع في مركز الحلقة. كل ذرة تنتقل عبر المركز إلى الذرة المقابلة لها تماماً، مثل C1 و C4.`),
+Sax(6, Z, `يقع على امتداد المحور الرئيسي: دوران بزاوية 60° ثم انعكاس في مستوى الحلقة. ويقع ${sy('S', '3')} على نفس الخط: دوران بزاوية 120° ثم انعكاس.`, { ops: [6, 3], note: `ومعه ${sy('S', '3')}` }),
+],
+};
+const a = 1.087 / Math.sqrt(3);
+const hDirs = [[1, 1, 1], [1, -1, -1], [-1, 1, -1], [-1, -1, 1]];
+const ch4C3 = `يقع على امتداد رابطة C–H، ويمر بذرة الكربون ومركز الوجه المقابل من رباعي الأوجه. الدوران بزاوية 120° يُبقي ذرتي C و H الواقعتين عليه ويدوّر ذرات H الثلاث الأخرى.`;
+const ch4C2 = `يمر بذرة الكربون وينصّف زاويتين H–C–H متقابلتين. المحاور الثلاثة متعامدة فيما بينها.`;
+const ch4S4 = `يقع على نفس خط ${sy('C', '2')}. الدوران بزاوية 90° وحده لا يعطي شكلاً مطابقاً (لا يوجد ${sy('C', '4')})، لكن إذا تبعه انعكاس في المستوى العمودي على المحور رجع الشكل مطابقاً.`;
+const ch4Sd = `يحتوي ذرة الكربون وذرتي هيدروجين، وينصّف الزاوية H–C–H بين الذرتين الأخريين.`;
+const ch4 = {
+id: 'ch4', tab: 'ch4', hash: 'ch4',
+formula: 'CH<sub>4</sub>', short: 'الميثان',
+nameAr: 'الميثان', nameEn: 'Methane', shapeAr: 'رباعي الأوجه', shapeEn: 'tetrahedral',
+pg: ['T', 'd'], order: 24,
+classes: [['', 'E'], ['8', 'C', '3'], ['3', 'C', '2'], ['6', 'S', '4'], ['6', 'σ', 'd']],
+atoms: [atom('C', 'C', [0, 0, 0])].concat(hDirs.map((d, k) => atom('H', `H${k + 1}`, [a * d[0], a * d[1], a * d[2]]))),
+bonds: [[0, 1], [0, 2], [0, 3], [0, 4]],
+view: { az: -62, el: 18 },
+elements: [
+...hDirs.map((d) => Cax(3, d, ch4C3)),
+Cax(2, [1, 0, 0], ch4C2, { note: 'على المحور x' }), Cax(2, [0, 1, 0], ch4C2, { note: 'على المحور y' }), Cax(2, [0, 0, 1], ch4C2, { note: 'على المحور z' }),
+Pl('d', [1, -1, 0], ch4Sd), Pl('d', [1, 1, 0], ch4Sd), Pl('d', [0, 1, -1], ch4Sd),
+Pl('d', [0, 1, 1], ch4Sd), Pl('d', [1, 0, -1], ch4Sd), Pl('d', [1, 0, 1], ch4Sd),
+Sax(4, [1, 0, 0], ch4S4, { note: 'على المحور x' }), Sax(4, [0, 1, 0], ch4S4, { note: 'على المحور y' }), Sax(4, [0, 0, 1], ch4S4, { note: 'على المحور z' }),
+],
+};
+const zC = 1.535 / 2;
+const tilt = (180 - 111.2) * D, rCH = 1.094;
+const hr = rCH * Math.sin(tilt), zH = zC + rCH * Math.cos(tilt);
+const ethAtoms = (bottomAngles) => [
+atom('C', 'C1', [0, 0, zC]), atom('C', 'C2', [0, 0, -zC]),
+atom('H', 'H1', pol(hr, 90, zH)), atom('H', 'H2', pol(hr, 210, zH)), atom('H', 'H3', pol(hr, 330, zH)),
+atom('H', 'H4', pol(hr, bottomAngles[0], -zH)), atom('H', 'H5', pol(hr, bottomAngles[1], -zH)), atom('H', 'H6', pol(hr, bottomAngles[2], -zH)),
+];
+const ethBonds = [[0, 1], [0, 2], [0, 3], [0, 4], [1, 5], [1, 6], [1, 7]];
+const ethC3 = `المحور الرئيسي، على امتداد الرابطة C–C. الدوران بزاوية 120° يدوّر ذرات H الثلاث على كل كربون.`;
+const ethSC2 = `عمودي على الرابطة C–C ويمر بمنتصفها دون أن يمر بأي ذرة. الدوران بزاوية 180° يقلب الجزيء فيتبادل الكربونان موقعيهما.`;
+const ethSd = `يحتوي الرابطة C–C وذرة هيدروجين من كل كربون، والذرتان في وضع متعاكس (anti). وينصّف الزاوية بين محوري ${sy('C', '2')} متجاورين.`;
+const ethEC2 = `عمودي على الرابطة C–C ويمر بمنتصفها، باتجاه زوج من ذرات H المتقابلة. الدوران بزاوية 180° يقلب الجزيء فيتبادل الكربونان موقعيهما.`;
+const ethEv = `يحتوي الرابطة C–C وزوجاً من ذرات H المتقابلة، واحدة على كل كربون.`;
+const ethaneS = {
+id: 'ethane-s', tab: 'ethane', conf: 'staggered', hash: 'ethane',
+formula: 'C<sub>2</sub>H<sub>6</sub>', short: 'الإيثان',
+nameAr: 'الإيثان', nameEn: 'Ethane', shapeAr: 'الهيئة المتعاقبة', shapeEn: 'staggered conformation',
+pg: ['D', '3d'], order: 12,
+classes: [['', 'E'], ['2', 'C', '3'], ['3', 'C', '2'], ['', 'i'], ['2', 'S', '6'], ['3', 'σ', 'd']],
+atoms: ethAtoms([270, 30, 150]),
+bonds: ethBonds,
+view: { az: -70, el: 12 },
+elements: [
+Cax(3, Z, ethC3, { principal: true }),
+Cax(2, dirAt(0), ethSC2), Cax(2, dirAt(60), ethSC2), Cax(2, dirAt(120), ethSC2),
+Pl('d', planeAt(30), ethSd), Pl('d', planeAt(90), ethSd), Pl('d', planeAt(150), ethSd),
+Inv(`يقع في منتصف الرابطة C–C. كل ذرة H تنتقل عبره إلى ذرة H المقابلة لها على الكربون الآخر. موجود في الهيئة المتعاقبة فقط.`),
+Sax(6, Z, `يقع على امتداد الرابطة C–C: دوران بزاوية 60° ثم انعكاس في المستوى العمودي على الرابطة عند منتصفها.`),
+],
+};
+const ethaneE = {
+id: 'ethane-e', tab: 'ethane', conf: 'eclipsed', hash: 'ethane-eclipsed',
+formula: 'C<sub>2</sub>H<sub>6</sub>', short: 'الإيثان',
+nameAr: 'الإيثان', nameEn: 'Ethane', shapeAr: 'الهيئة المتطابقة', shapeEn: 'eclipsed conformation',
+pg: ['D', '3h'], order: 12,
+classes: [['', 'E'], ['2', 'C', '3'], ['3', 'C', '2'], ['', 'σ', 'h'], ['2', 'S', '3'], ['3', 'σ', 'v']],
+atoms: ethAtoms([90, 210, 330]),
+bonds: ethBonds,
+view: { az: -70, el: 12 },
+elements: [
+Cax(3, Z, ethC3, { principal: true }),
+Cax(2, dirAt(30), ethEC2), Cax(2, dirAt(90), ethEC2), Cax(2, dirAt(150), ethEC2),
+Pl('h', Z, `عمودي على الرابطة C–C عند منتصفها. الانعكاس فيه يبدّل الكربونين، وكل ذرة H بالذرة المقابلة لها. موجود في الهيئة المتطابقة فقط.`),
+Pl('v', planeAt(30), ethEv), Pl('v', planeAt(90), ethEv), Pl('v', planeAt(150), ethEv),
+Sax(3, Z, `يقع على امتداد الرابطة C–C: دوران بزاوية 120° ثم انعكاس في ${sy('σ', 'h')}.`),
+],
+};
+const MOLS = [bcl3, h2o, benzene, ch4, ethaneS, ethaneE];
+if (typeof module !== 'undefined' && module.exports) module.exports = MOLS;
+else root.SYM_MOLS = MOLS;
+})(typeof window !== 'undefined' ? window : globalThis);
+</script>
+<script>
+(function () {
+'use strict';
+const MOLS = window.SYM_MOLS;
+const $ = (s, r = document) => r.querySelector(s);
+const DEG = Math.PI / 180;
+const FOV = 30 * DEG;
+const reduceMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+const SPEED = reduceMotion ? 0.6 : 1;
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const ease = (t) => 0.5 - 0.5 * Math.cos(Math.PI * t);
+const sym = (l, s = '', p = '') => `<span class="sym"><i>${l}</i>${s ? `<sub>${s}</sub>` : ''}${p}</span>`;
+const ORD = { 2: 'ثنائي', 3: 'ثلاثي', 4: 'رباعي', 6: 'سداسي' };
+const ORD_EN = { 2: 'Two', 3: 'Three', 4: 'Four', 6: 'Six' };
+const en = (t) => `<span lang="en" dir="ltr">${t}</span>`;
+const biName = (pair) => `${pair[0]} · ${en(pair[1])}`;
+const FAM = {
+E: { title: 'الهوية', en: 'Identity', head: sym('E'), cvar: '--c-e', lead: 'عملية لا تحرّك أي ذرة، ويملكها كل جزيء.' },
+C: { title: 'محاور الدوران', en: 'Proper rotation axes', head: sym('C', 'n'), cvar: '--c-cn', lead: 'الدوران بزاوية 360°/n حول المحور يعطي شكلاً مطابقاً للأصل.' },
+sigma: { title: 'مستويات المرآة', en: 'Mirror planes', head: sym('σ'), cvar: '--ink', lead: `الانعكاس في المستوى يعطي شكلاً مطابقاً للأصل. ${sym('σ', 'h')} عمودي على المحور الرئيسي، و ${sym('σ', 'v')} و ${sym('σ', 'd')} يحتويانه.` },
+i: { title: 'مركز الانقلاب', en: 'Inversion center', head: sym('i'), cvar: '--c-i', lead: 'كل ذرة تنتقل عبر المركز إلى نقطة مقابلة على البعد نفسه.' },
+S: { title: 'محاور الدوران غير الحقيقي', en: 'Improper rotation axes', head: sym('S', 'n'), cvar: '--c-sn', lead: 'دوران بزاوية 360°/n ثم انعكاس في مستوى عمودي على المحور.' },
+};
+const TOP_NOTE = {
+bcl3: `المحور ${sym('C', '3')}`,
+h2o: `المحور ${sym('C', '2')}`,
+benzene: `المحور ${sym('C', '6')}`,
+ch4: `المحور z، وعليه ${sym('C', '2')} و ${sym('S', '4')}`,
+'ethane-s': 'الرابطة C–C (إسقاط نيومان)',
+'ethane-e': 'الرابطة C–C (إسقاط نيومان)',
+};
+const ICON = {
+play: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z"/></svg>',
+eye: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="2.8"/></svg>',
+eyeOff: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 3.5l17 17"/><path d="M9.9 5.8A10.6 10.6 0 0 1 12 5.5c6.4 0 10 6.5 10 6.5a17 17 0 0 1-3.1 3.9M6.4 6.9C3.6 8.7 2 12 2 12s3.6 6.5 10 6.5c1.5 0 2.8-.3 4-.9"/></svg>',
+look: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="2"/></svg>',
+dot: '<svg viewBox="0 0 10 10" aria-hidden="true"><circle cx="5" cy="5" r="4"/></svg>',
+};
+const vAdd = (a, b) => [a[0] + b[0], a[1] + b[1], a[2] + b[2]];
+const vSub = (a, b) => [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
+const vScale = (a, s) => [a[0] * s, a[1] * s, a[2] * s];
+const vDot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+const vCross = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+const vLen = (a) => Math.hypot(a[0], a[1], a[2]);
+const vNorm = (a) => { const l = vLen(a) || 1; return [a[0] / l, a[1] / l, a[2] / l]; };
+const qNorm = (q) => { const l = Math.hypot(q[0], q[1], q[2], q[3]) || 1; return [q[0] / l, q[1] / l, q[2] / l, q[3] / l]; };
+const qConj = (q) => [-q[0], -q[1], -q[2], q[3]];
+const qAxis = (axis, ang) => { const a = vNorm(axis), s = Math.sin(ang / 2); return [a[0] * s, a[1] * s, a[2] * s, Math.cos(ang / 2)]; };
+const qMul = (a, b) => [
+a[3] * b[0] + a[0] * b[3] + a[1] * b[2] - a[2] * b[1],
+a[3] * b[1] - a[0] * b[2] + a[1] * b[3] + a[2] * b[0],
+a[3] * b[2] + a[0] * b[1] - a[1] * b[0] + a[2] * b[3],
+a[3] * b[3] - a[0] * b[0] - a[1] * b[1] - a[2] * b[2],
+];
+function qRot(q, v) {
+const x = q[0], y = q[1], z = q[2], w = q[3];
+const tx = 2 * (y * v[2] - z * v[1]), ty = 2 * (z * v[0] - x * v[2]), tz = 2 * (x * v[1] - y * v[0]);
+return [v[0] + w * tx + (y * tz - z * ty), v[1] + w * ty + (z * tx - x * tz), v[2] + w * tz + (x * ty - y * tx)];
+}
+function qFromTo(u, v) {
+const d = vDot(u, v);
+if (d < -0.999999) {
+let ax = vCross([1, 0, 0], u);
+if (vLen(ax) < 1e-6) ax = vCross([0, 0, 1], u);
+return qAxis(ax, Math.PI);
+}
+const c = vCross(u, v);
+return qNorm([c[0], c[1], c[2], 1 + d]);
+}
+function qSlerp(a, b, t) {
+let bx = b[0], by = b[1], bz = b[2], bw = b[3];
+let c = a[0] * bx + a[1] * by + a[2] * bz + a[3] * bw;
+if (c < 0) { c = -c; bx = -bx; by = -by; bz = -bz; bw = -bw; }
+if (c > 0.9995) return qNorm([a[0] + (bx - a[0]) * t, a[1] + (by - a[1]) * t, a[2] + (bz - a[2]) * t, a[3] + (bw - a[3]) * t]);
+const th = Math.acos(c), s = Math.sin(th), w1 = Math.sin((1 - t) * th) / s, w2 = Math.sin(t * th) / s;
+return [a[0] * w1 + bx * w2, a[1] * w1 + by * w2, a[2] * w1 + bz * w2, a[3] * w1 + bw * w2];
+}
+function qFromRows(r0, r1, r2) {
+const m00 = r0[0], m01 = r0[1], m02 = r0[2], m10 = r1[0], m11 = r1[1], m12 = r1[2], m20 = r2[0], m21 = r2[1], m22 = r2[2];
+const tr = m00 + m11 + m22;
+let x, y, z, w;
+if (tr > 0) { const s = 0.5 / Math.sqrt(tr + 1); w = 0.25 / s; x = (m21 - m12) * s; y = (m02 - m20) * s; z = (m10 - m01) * s; }
+else if (m00 > m11 && m00 > m22) { const s = 2 * Math.sqrt(1 + m00 - m11 - m22); w = (m21 - m12) / s; x = 0.25 * s; y = (m01 + m10) / s; z = (m02 + m20) / s; }
+else if (m11 > m22) { const s = 2 * Math.sqrt(1 + m11 - m00 - m22); w = (m02 - m20) / s; x = (m01 + m10) / s; y = 0.25 * s; z = (m12 + m21) / s; }
+else { const s = 2 * Math.sqrt(1 + m22 - m00 - m11); w = (m10 - m01) / s; x = (m02 + m20) / s; y = (m12 + m21) / s; z = 0.25 * s; }
+return qNorm([x, y, z, w]);
+}
+const qFromCols = (c0, c1, c2) => qFromRows([c0[0], c1[0], c2[0]], [c0[1], c1[1], c2[1]], [c0[2], c1[2], c2[2]]);
+function qOrient(view, up) {
+const z = vNorm(view);
+let y = vSub(up, vScale(z, vDot(up, z)));
+if (vLen(y) < 1e-4) { y = vSub([0, 1, 0], vScale(z, z[1])); if (vLen(y) < 1e-4) y = vSub([1, 0, 0], vScale(z, z[0])); }
+y = vNorm(y);
+return qFromRows(vCross(y, z), y, z);
+}
+function m4Perspective(out, fovy, aspect, near, far) {
+const f = 1 / Math.tan(fovy / 2), nf = 1 / (near - far);
+out.fill(0);
+out[0] = f / aspect; out[5] = f; out[10] = (far + near) * nf; out[11] = -1; out[14] = 2 * far * near * nf;
+return out;
+}
+function m4Mul(out, a, b) {
+for (let c = 0; c < 4; c++) for (let r = 0; r < 4; r++) {
+out[c * 4 + r] = a[r] * b[c * 4] + a[4 + r] * b[c * 4 + 1] + a[8 + r] * b[c * 4 + 2] + a[12 + r] * b[c * 4 + 3];
+}
+return out;
+}
+function m4FromRTS(out, q, t, s) {
+const x = q[0], y = q[1], z = q[2], w = q[3];
+const x2 = x + x, y2 = y + y, z2 = z + z;
+const xx = x * x2, xy = x * y2, xz = x * z2, yy = y * y2, yz = y * z2, zz = z * z2, wx = w * x2, wy = w * y2, wz = w * z2;
+out[0] = (1 - (yy + zz)) * s[0]; out[1] = (xy + wz) * s[0]; out[2] = (xz - wy) * s[0]; out[3] = 0;
+out[4] = (xy - wz) * s[1]; out[5] = (1 - (xx + zz)) * s[1]; out[6] = (yz + wx) * s[1]; out[7] = 0;
+out[8] = (xz + wy) * s[2]; out[9] = (yz - wx) * s[2]; out[10] = (1 - (xx + yy)) * s[2]; out[11] = 0;
+out[12] = t[0]; out[13] = t[1]; out[14] = t[2]; out[15] = 1;
+return out;
+}
+function m3FromQuat(out, q) {
+const x = q[0], y = q[1], z = q[2], w = q[3];
+const x2 = x + x, y2 = y + y, z2 = z + z;
+const xx = x * x2, xy = x * y2, xz = x * z2, yy = y * y2, yz = y * z2, zz = z * z2, wx = w * x2, wy = w * y2, wz = w * z2;
+out[0] = 1 - (yy + zz); out[1] = xy + wz; out[2] = xz - wy;
+out[3] = xy - wz; out[4] = 1 - (xx + zz); out[5] = yz + wx;
+out[6] = xz + wy; out[7] = yz - wx; out[8] = 1 - (xx + yy);
+return out;
+}
+const ATOM = {
+H: { r: 0.23, color: '#EEF1F4' },
+B: { r: 0.35, color: '#EE9C70' },
+C: { r: 0.33, color: '#5F6874' },
+O: { r: 0.34, color: '#E0453B' },
+Cl: { r: 0.42, color: '#3DAF57' },
+};
+const BOND_R = 0.075;
+const AXIS_EXTRA = 1.0; // how far symmetry axes reach beyond the outermost atom
+function hexRgb(h) {
+h = String(h || '').trim().replace('#', '');
+if (h.length === 3) h = h.split('').map((c) => c + c).join('');
+const n = parseInt(h, 16);
+if (Number.isNaN(n)) return [0.5, 0.5, 0.5];
+return [((n >> 16) & 255) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255];
+}
+let theme = {};
+function readTheme() {
+const cs = getComputedStyle(document.documentElement);
+const g = (v, d) => cs.getPropertyValue(v).trim() || d;
+theme = {
+cn: hexRgb(g('--c-cn', '#2B63D9')), sn: hexRgb(g('--c-sn', '#0B8F84')),
+sh: hexRgb(g('--c-sh', '#D98200')), sv: hexRgb(g('--c-sv', '#7546D8')), sd: hexRgb(g('--c-sd', '#CC2F67')),
+i: hexRgb(g('--c-i', '#C62828')),
+planeAlpha: parseFloat(g('--plane-alpha', '0.15')) || 0.15,
+};
+}
+const colorKey = (def) => (def.fam === 'C' ? 'cn' : def.fam === 'S' ? 'sn' : def.fam === 'i' ? 'i' : 's' + def.sub);
+const colorVar = (def) => `--c-${colorKey(def)}`;
+const symOf = (def) => sym(def.sym, def.fam === 'i' ? '' : def.sub, def.prime);
+const plainOf = (def) => `${def.sym}${def.fam === 'i' ? '' : def.sub}${def.prime}`;
+const elKey = (def) => `${def.fam}|${def.sub}|${def.prime}`;
+function titleOf(def) {
+if (def.fam === 'C') return def.principal
+? [`محور دوران ${ORD[def.n]}، وهو المحور الرئيسي`, `${ORD_EN[def.n]}-fold rotation axis, the principal axis`]
+: [`محور دوران ${ORD[def.n]}`, `${ORD_EN[def.n]}-fold rotation axis`];
+if (def.fam === 'S') return [`محور دوران غير حقيقي ${ORD[def.n]}`, `${ORD_EN[def.n]}-fold improper rotation axis`];
+if (def.fam === 'sigma') return { h: ['مستوى مرآة أفقي', 'Horizontal mirror plane'], v: ['مستوى مرآة رأسي', 'Vertical mirror plane'], d: ['مستوى مرآة ثنائي السطوح', 'Dihedral mirror plane'] }[def.sub];
+return ['مركز انقلاب', 'Inversion center'];
+}
+function kindOf(def) {
+if (def.fam === 'C') return def.principal ? [`محور ${ORD[def.n]} رئيسي`, `principal ${def.n}-fold axis`] : [`محور ${ORD[def.n]}`, `${def.n}-fold axis`];
+if (def.fam === 'S') return [`محور غير حقيقي ${ORD[def.n]}`, `${def.n}-fold improper axis`];
+if (def.fam === 'sigma') return { h: ['مستوى أفقي', 'horizontal plane'], v: ['مستوى رأسي', 'vertical plane'], d: ['مستوى ثنائي السطوح', 'dihedral plane'] }[def.sub];
+return ['مركز انقلاب', 'inversion center'];
+}
+function opsOf(def) {
+if (def.fam === 'C') return def.ops.map((n) => ({ kind: 'C', n, dir: def.dir, label: sym('C', String(n)), plain: `C${n}` }));
+if (def.fam === 'S') return def.ops.map((n) => ({ kind: 'S', n, dir: def.dir, label: sym('S', String(n)), plain: `S${n}` }));
+if (def.fam === 'sigma') return [{ kind: 'sigma', normal: def.normal, label: symOf(def), plain: plainOf(def) }];
+return [{ kind: 'i', label: sym('i'), plain: 'i' }];
+}
+const OP_E = { kind: 'E', label: sym('E'), plain: 'E' };
+const bdiList = (arr) => arr.map((l) => `<bdi>${l}</bdi>`).join('، ');
+function atomsCount(n) {
+if (n === 0) return 'ولا ذرة';
+if (n === 1) return 'ذرة واحدة';
+if (n === 2) return 'ذرتان';
+if (n <= 10) return `${n} ذرات`;
+return `${n} ذرة`;
+}
+function onText(e) {
+const l = e.on, f = e.def.fam;
+if (f === 'sigma') return l.length ? `يحتوي ${bdiList(l)}` : 'لا يحتوي أي ذرة';
+if (f === 'i') return l.length ? `تقع عليه ${bdiList(l)}` : 'لا تقع عليه أي ذرة';
+return l.length ? `يمر بـ ${bdiList(l)}` : 'لا يمر بأي ذرة';
+}
+const canvas = $('#gl');
+const viewerEl = $('#viewer');
+const labelsEl = $('#labels');
+const captionEl = $('#caption');
+const hintEl = $('#hint');
+const tabsEl = $('#tabs');
+const molCardEl = $('#molCard');
+const confEl = $('#conf');
+const elementsEl = $('#elements');
+const infoEl = $('#info');
+const toolbarEl = $('#toolbar');
+let gl = null;
+try {
+gl = canvas.getContext('webgl', { antialias: true, alpha: true, premultipliedAlpha: true })
+|| canvas.getContext('experimental-webgl', { antialias: true, alpha: true });
+} catch (err) { gl = null; }
+const VS = `
+attribute vec3 aPos; attribute vec3 aNrm;
+uniform mat4 uMVP; uniform mat4 uMV; uniform mat3 uNM;
+varying vec3 vN; varying vec3 vP;
+void main() {
+vec4 p = uMV * vec4(aPos, 1.0);
+vP = p.xyz;
+vN = uNM * aNrm;
+gl_Position = uMVP * vec4(aPos, 1.0);
+}`;
+const FS = `
+precision mediump float;
+uniform vec3 uColor; uniform float uAlpha; uniform float uLit;
+varying vec3 vN; varying vec3 vP;
+void main() {
+vec3 c = uColor;
+if (uLit > 0.5) {
+vec3 N = normalize(vN);
+vec3 V = normalize(-vP);
+vec3 L1 = normalize(vec3(-0.5, 0.65, 0.8));
+vec3 L2 = normalize(vec3(0.7, -0.4, 0.45));
+float d1 = max(dot(N, L1), 0.0);
+float d2 = max(dot(N, L2), 0.0);
+float sp = pow(max(dot(N, normalize(L1 + V)), 0.0), 40.0);
+float rim = pow(1.0 - max(dot(N, V), 0.0), 2.5);
+c = c * (0.36 + 0.64 * d1 + 0.18 * d2) + vec3(0.28) * sp - c * 0.2 * rim;
+}
+gl_FragColor = vec4(c, uAlpha);
+}`;
+let prog = null, LOC = null, MESH = null, boundMesh = null;
+function makeMesh(pos, nrm, idx, mode) {
+const n = pos.length / 3, data = new Float32Array(n * 6);
+for (let i = 0; i < n; i++) {
+data[i * 6] = pos[i * 3]; data[i * 6 + 1] = pos[i * 3 + 1]; data[i * 6 + 2] = pos[i * 3 + 2];
+data[i * 6 + 3] = nrm[i * 3]; data[i * 6 + 4] = nrm[i * 3 + 1]; data[i * 6 + 5] = nrm[i * 3 + 2];
+}
+const vbo = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER, vbo);
+gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
+let ibo = null, count = n;
+if (idx) {
+ibo = gl.createBuffer();
+gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ibo);
+gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(idx), gl.STATIC_DRAW);
+count = idx.length;
+}
+return { vbo, ibo, count, mode };
+}
+function sphereMesh(seg, rings) {
+const pos = [], idx = [];
+for (let r = 0; r <= rings; r++) {
+const th = (r * Math.PI) / rings, st = Math.sin(th), ct = Math.cos(th);
+for (let s = 0; s <= seg; s++) { const ph = (s * 2 * Math.PI) / seg; pos.push(st * Math.cos(ph), ct, st * Math.sin(ph)); }
+}
+for (let r = 0; r < rings; r++) for (let s = 0; s < seg; s++) {
+const a = r * (seg + 1) + s, b = a + seg + 1;
+idx.push(a, a + 1, b, b, a + 1, b + 1);
+}
+return makeMesh(pos, pos, idx, gl.TRIANGLES);
+}
+function cylMesh(seg) {
+const pos = [], nrm = [], idx = [];
+for (let s = 0; s <= seg; s++) {
+const ph = (s * 2 * Math.PI) / seg, x = Math.cos(ph), z = Math.sin(ph);
+pos.push(x, -0.5, z, x, 0.5, z); nrm.push(x, 0, z, x, 0, z);
+}
+for (let s = 0; s < seg; s++) { const a = s * 2; idx.push(a, a + 1, a + 2, a + 1, a + 3, a + 2); }
+for (const y of [-0.5, 0.5]) {
+const c = pos.length / 3;
+pos.push(0, y, 0); nrm.push(0, Math.sign(y), 0);
+for (let s = 0; s <= seg; s++) { const ph = (s * 2 * Math.PI) / seg; pos.push(Math.cos(ph), y, Math.sin(ph)); nrm.push(0, Math.sign(y), 0); }
+for (let s = 0; s < seg; s++) idx.push(c, c + 1 + s, c + 2 + s);
+}
+return makeMesh(pos, nrm, idx, gl.TRIANGLES);
+}
+function initGL() {
+const compile = (type, src) => {
+const s = gl.createShader(type);
+gl.shaderSource(s, src); gl.compileShader(s);
+if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s));
+return s;
+};
+prog = gl.createProgram();
+gl.attachShader(prog, compile(gl.VERTEX_SHADER, VS));
+gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, FS));
+gl.linkProgram(prog);
+if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(prog));
+gl.useProgram(prog);
+LOC = {
+aPos: gl.getAttribLocation(prog, 'aPos'), aNrm: gl.getAttribLocation(prog, 'aNrm'),
+uMVP: gl.getUniformLocation(prog, 'uMVP'), uMV: gl.getUniformLocation(prog, 'uMV'), uNM: gl.getUniformLocation(prog, 'uNM'),
+uColor: gl.getUniformLocation(prog, 'uColor'), uAlpha: gl.getUniformLocation(prog, 'uAlpha'), uLit: gl.getUniformLocation(prog, 'uLit'),
+};
+gl.enableVertexAttribArray(LOC.aPos);
+if (LOC.aNrm >= 0) gl.enableVertexAttribArray(LOC.aNrm);
+const sq = [-1, -1, 0, 1, -1, 0, 1, 1, 0, -1, 1, 0], up = [0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1];
+MESH = {
+sphere: sphereMesh(40, 28),
+cyl: cylMesh(22),
+quad: makeMesh(sq, up, [0, 1, 2, 0, 2, 3], gl.TRIANGLES),
+loop: makeMesh(sq, up, null, gl.LINE_LOOP),
+};
+}
+const S = {
+tab: 'bcl3', conf: 'staggered', mol: null,
+atoms: [], sites: [], elems: [], R: 2,
+selected: -1, labels: true, auto: false, xray: false,
+q: [0, 0, 0, 1], zoom: 1, fitD: 10,
+anim: null, viewAnim: null, inertia: null, pulse: 0,
+temp: [], last: null,
+atomObjs: [], bondObjs: [], ghostObjs: [],
+};
+const PM = new Float32Array(16), MV = new Float32Array(16), MVP = new Float32Array(16), NM = new Float32Array(9);
+let sizeDirty = true, needsRender = true, dragging = false;
+const requestRender = () => { needsRender = true; };
+const molFor = (tab, conf) => MOLS.find((m) => m.tab === tab && (!m.conf || m.conf === conf)) || MOLS[0];
+const molFromHash = () => { const h = (location.hash || '').replace('#', ''); return MOLS.find((m) => m.hash === h) || null; };
+function atomsOn(def, atoms) {
+const out = [];
+for (const a of atoms) {
+const p = a.p;
+let d;
+if (def.fam === 'C' || def.fam === 'S') d = vLen(vSub(p, vScale(def.dir, vDot(p, def.dir))));
+else if (def.fam === 'sigma') d = Math.abs(vDot(p, def.normal));
+else d = vLen(p);
+if (d < 0.01) out.push(a.label);
+}
+return out;
+}
+function planeBasis(n) {
+const ref = Math.abs(n[2]) > 0.99 ? [0, 1, 0] : [0, 0, 1];
+const y = vNorm(vSub(ref, vScale(n, vDot(ref, n))));
+return { x: vCross(y, n), y, z: n };
+}
+function planeSize(b) {
+let hw = 0, hh = 0;
+for (const s of S.sites) {
+const r = ATOM[s.el].r;
+hw = Math.max(hw, Math.abs(vDot(s.p, b.x)) + r);
+hh = Math.max(hh, Math.abs(vDot(s.p, b.y)) + r);
+}
+let w = Math.max(hw + 0.45, 1.15), h = Math.max(hh + 0.45, 1.15);
+h = Math.max(h, 0.55 * w); w = Math.max(w, 0.55 * h);
+return [w, h];
+}
+function setCyl(o, p1, p2, rad) {
+const d = vSub(p2, p1), L = vLen(d);
+o.t = vScale(vAdd(p1, p2), 0.5);
+o.s = [rad, Math.max(L, 1e-4), rad];
+o.q = L > 1e-6 ? qFromTo([0, 1, 0], vScale(d, 1 / L)) : [0, 0, 0, 1];
+}
+function axisObjs(dir, half, col, rad, dashed) {
+const q = qFromTo([0, 1, 0], dir);
+if (!dashed) return [{ mesh: 'cyl', q, t: [0, 0, 0], s: [rad, 2 * half, rad], color: col, alpha: 1, lit: false }];
+const out = [], dash = 0.2, gap = 0.12;
+for (let x = -half; x < half - 1e-6; x += dash + gap) {
+const len = Math.min(dash, half - x);
+out.push({ mesh: 'cyl', q, t: vScale(dir, x + len / 2), s: [rad, len, rad], color: col, alpha: 1, lit: false });
+}
+return out;
+}
+function planeObjs(n, col, aScale, strong) {
+const b = planeBasis(n), sz = planeSize(b), q = qFromCols(b.x, b.y, b.z);
+return [
+{ mesh: 'quad', q, t: [0, 0, 0], s: [sz[0], sz[1], 1], color: col, alpha: Math.min(0.6, theme.planeAlpha * aScale), lit: false, trans: true },
+{ mesh: 'loop', q, t: [0, 0, 0], s: [sz[0], sz[1], 1], color: col, alpha: strong ? 1 : 0.7, lit: false, trans: true },
+];
+}
+function makeElemObjs(def, sel) {
+const col = theme[colorKey(def)], half = S.R + AXIS_EXTRA;
+if (def.fam === 'C') return axisObjs(def.dir, half, col, (def.principal ? 0.042 : 0.03) * (sel ? 1.5 : 1), false);
+if (def.fam === 'S') return axisObjs(def.dir, half, col, 0.052 * (sel ? 1.35 : 1), true);
+if (def.fam === 'sigma') return planeObjs(def.normal, col, sel ? 1.9 : 1, sel);
+const r = sel ? 0.17 : 0.14;
+return [{ mesh: 'sphere', q: [0, 0, 0, 1], t: [0, 0, 0], s: [r, r, r], color: col, alpha: 1, lit: true }];
+}
+function elemAnchor(def) {
+const half = S.R + AXIS_EXTRA;
+if (def.fam === 'C') return vScale(def.dir, half + 0.3);
+if (def.fam === 'S') return vScale(def.dir, -(half + 0.3));
+if (def.fam === 'sigma') { const b = planeBasis(def.normal), sz = planeSize(b); return vAdd(vScale(b.x, sz[0] * 0.86), vScale(b.y, sz[1] * 0.86)); }
+return [0, 0, 0];
+}
+function rebuildElemObjs() {
+for (const e of S.elems) { e.objs = makeElemObjs(e.def, e.idx === S.selected); e.anchor = elemAnchor(e.def); }
+}
+function buildSceneObjs() {
+S.atomObjs = S.atoms.map((a) => ({ mesh: 'sphere', q: [0, 0, 0, 1], t: a.pos, s: [a.r, a.r, a.r], color: a.rgb, alpha: 1, lit: true }));
+S.bondObjs = [];
+S.mol.bonds.forEach(([i, j]) => {
+S.bondObjs.push({ mesh: 'cyl', q: [0, 0, 0, 1], t: [0, 0, 0], s: [1, 1, 1], color: S.atoms[i].rgb, alpha: 1, lit: true, ai: i, bi: j, half: 0 });
+S.bondObjs.push({ mesh: 'cyl', q: [0, 0, 0, 1], t: [0, 0, 0], s: [1, 1, 1], color: S.atoms[j].rgb, alpha: 1, lit: true, ai: i, bi: j, half: 1 });
+});
+S.ghostObjs = S.sites.map((s) => { const r = ATOM[s.el].r * 1.04; return { mesh: 'sphere', q: [0, 0, 0, 1], t: s.p, s: [r, r, r], color: hexRgb(ATOM[s.el].color), alpha: 0.22, lit: true, trans: true }; });
+rebuildElemObjs();
+}
+function updateMolObjs() {
+const k = 1 + 0.16 * S.pulse, alpha = S.xray ? 0.3 : 1;
+S.atoms.forEach((a, i) => { const o = S.atomObjs[i]; o.t = a.pos; const r = a.r * k; o.s = [r, r, r]; o.alpha = alpha; o.trans = S.xray; });
+for (const o of S.bondObjs) {
+o.alpha = alpha; o.trans = S.xray;
+const a = S.atoms[o.ai].pos, b = S.atoms[o.bi].pos, m = vScale(vAdd(a, b), 0.5);
+if (o.half === 0) setCyl(o, a, m, BOND_R); else setCyl(o, m, b, BOND_R);
+}
+}
+function buildLabels() {
+labelsEl.textContent = '';
+for (const a of S.atoms) {
+const d = document.createElement('div');
+d.className = 'lbl atom'; d.textContent = a.label;
+labelsEl.appendChild(d); a.lbl = d;
+}
+for (const e of S.elems) {
+const d = document.createElement('div');
+d.className = 'lbl elem' + (e.def.fam === 'i' ? ' center' : '');
+d.style.setProperty('--c', `var(${colorVar(e.def)})`);
+d.innerHTML = symOf(e.def).replace('class="sym"', '') + (e.num ? `<small>${e.num}</small>` : '');
+labelsEl.appendChild(d); e.lbl = d;
+}
+}
+function loadMolecule(mol, keepView) {
+S.mol = mol; S.tab = mol.tab;
+if (mol.conf) S.conf = mol.conf;
+S.sites = mol.atoms.map((a) => ({ el: a.el, p: a.p.slice() }));
+S.atoms = mol.atoms.map((a, i) => ({ el: a.el, label: a.label, site: i, pos: a.p.slice(), r: ATOM[a.el].r, rgb: hexRgb(ATOM[a.el].color), lbl: null }));
+S.R = Math.max(...mol.atoms.map((a) => vLen(a.p) + ATOM[a.el].r));
+const counts = {}, seen = {};
+mol.elements.forEach((d) => { const k = elKey(d); counts[k] = (counts[k] || 0) + 1; });
+S.elems = mol.elements.map((def, idx) => {
+const k = elKey(def);
+seen[k] = (seen[k] || 0) + 1;
+return { def, idx, num: counts[k] > 1 ? seen[k] : 0, visible: false, on: atomsOn(def, mol.atoms), objs: [], anchor: [0, 0, 0], lbl: null };
+});
+const pi = S.elems.findIndex((e) => e.def.principal);
+S.selected = pi >= 0 ? pi : 0;
+S.elems[S.selected].visible = true;
+S.anim = null; S.temp = []; S.last = null; S.pulse = 0; S.inertia = null; S.viewAnim = null;
+document.body.classList.remove('busy');
+buildSceneObjs();
+buildLabels();
+if (!keepView) { S.q = homeQuat(); S.zoom = 1; }
+sizeDirty = true;
+renderPanel();
+setCaption('');
+requestRender();
+}
+function homeQuat() {
+const v = S.mol.view, az = v.az * DEG, el = v.el * DEG;
+return qOrient([Math.cos(el) * Math.cos(az), Math.cos(el) * Math.sin(az), Math.sin(el)], [0, 0, 1]);
+}
+const viewDirNow = () => qRot(qConj(S.q), [0, 0, 1]);
+function animateView(to) {
+S.inertia = null;
+if (reduceMotion) { S.q = to; S.viewAnim = null; requestRender(); return; }
+S.viewAnim = { from: S.q.slice(), to, t0: performance.now(), dur: 750 };
+requestRender();
+}
+function lookAlong(def) {
+const cur = viewDirNow();
+if (def.fam === 'C' || def.fam === 'S') {
+const d = vDot(def.dir, cur) < 0 ? vScale(def.dir, -1) : def.dir;
+animateView(qOrient(d, Math.abs(d[2]) > 0.99 ? [0, 1, 0] : [0, 0, 1]));
+return;
+}
+if (def.fam === 'sigma') {
+const n = def.normal;
+let v;
+if (Math.abs(n[2]) > 0.99) {
+const h = vNorm([cur[0], cur[1], 0]);
+v = vLen([cur[0], cur[1], 0]) > 1e-3 ? vNorm(vAdd(h, [0, 0, 0.16])) : vNorm([0, -1, 0.16]);
+} else {
+let v0 = vNorm(vCross(n, [0, 0, 1]));
+if (vDot(v0, cur) < 0) v0 = vScale(v0, -1);
+const up = vSub([0, 0, 1], vScale(n, n[2]));
+v = vNorm(vAdd(v0, vScale(vNorm(up), 0.16)));
+}
+animateView(qOrient(v, [0, 0, 1]));
+}
+}
+function updateFit() {
+const w = canvas.clientWidth || 1, h = canvas.clientHeight || 1, aspect = w / h;
+const fovX = 2 * Math.atan(Math.tan(FOV / 2) * aspect);
+S.fitD = (S.R + AXIS_EXTRA + 0.25) / Math.sin(Math.min(FOV, fovX) / 2);
+}
+function syncSize() {
+const dpr = Math.min(window.devicePixelRatio || 1, 2);
+const w = Math.max(1, Math.round(canvas.clientWidth * dpr)), h = Math.max(1, Math.round(canvas.clientHeight * dpr));
+if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; }
+updateFit();
+sizeDirty = false;
+}
+const setZoom = (z) => { S.zoom = clamp(z, 0.45, 2.2); requestRender(); };
+const rotWorld = (axis, ang) => { S.q = qNorm(qMul(qAxis(axis, ang), S.q)); requestRender(); };
+function drawObj(o, D, alphaOverride) {
+const mesh = MESH[o.mesh];
+const q = qMul(S.q, o.q);
+const t = qRot(S.q, o.t);
+t[2] -= D;
+m4FromRTS(MV, q, t, o.s);
+m4Mul(MVP, PM, MV);
+m3FromQuat(NM, q);
+gl.uniformMatrix4fv(LOC.uMVP, false, MVP);
+gl.uniformMatrix4fv(LOC.uMV, false, MV);
+gl.uniformMatrix3fv(LOC.uNM, false, NM);
+gl.uniform3fv(LOC.uColor, o.color);
+gl.uniform1f(LOC.uAlpha, alphaOverride === undefined ? o.alpha : alphaOverride);
+gl.uniform1f(LOC.uLit, o.lit ? 1 : 0);
+if (boundMesh !== mesh) {
+if (mesh === MESH.sphere) gl.enable(gl.CULL_FACE); else gl.disable(gl.CULL_FACE);
+gl.bindBuffer(gl.ARRAY_BUFFER, mesh.vbo);
+gl.vertexAttribPointer(LOC.aPos, 3, gl.FLOAT, false, 24, 0);
+if (LOC.aNrm >= 0) gl.vertexAttribPointer(LOC.aNrm, 3, gl.FLOAT, false, 24, 12);
+if (mesh.ibo) gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, mesh.ibo);
+boundMesh = mesh;
+}
+if (mesh.ibo) gl.drawElements(mesh.mode, mesh.count, gl.UNSIGNED_SHORT, 0);
+else gl.drawArrays(mesh.mode, 0, mesh.count);
+}
+function render() {
+if (!S.mol) return;
+if (sizeDirty) syncSize();
+const D = S.fitD * S.zoom;
+m4Perspective(PM, FOV, (canvas.width || 1) / (canvas.height || 1), 0.1, 200);
+updateMolObjs();
+if (gl && prog) {
+gl.viewport(0, 0, canvas.width, canvas.height);
+gl.clearColor(0, 0, 0, 0);
+gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+gl.useProgram(prog);
+boundMesh = null;
+const opaque = [], trans = [], lines = [];
+for (const o of S.atomObjs.concat(S.bondObjs)) (o.trans ? trans : opaque).push(o);
+const opElem = S.anim ? S.anim.elemIdx : null;
+S.elems.forEach((e, k) => {
+if (!(e.visible || k === opElem)) return;
+for (const o of e.objs) { if (o.trans) trans.push(o); else { opaque.push(o); lines.push(o); } }
+});
+if (S.anim && S.anim.op.kind === 'S' && S.anim.k >= 1) trans.push(...S.temp);
+if (S.anim) trans.push(...S.ghostObjs);
+gl.enable(gl.DEPTH_TEST); gl.depthFunc(gl.LEQUAL); gl.depthMask(true);
+gl.disable(gl.BLEND); gl.disable(gl.CULL_FACE); gl.cullFace(gl.BACK); gl.frontFace(gl.CCW);
+for (const o of opaque) drawObj(o, D);
+if (trans.length) {
+const zc = (o) => qRot(S.q, o.t)[2];
+trans.sort((a, b) => zc(a) - zc(b));
+gl.enable(gl.BLEND);
+gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+gl.depthMask(false);
+for (const o of trans) drawObj(o, D);
+gl.depthMask(true);
+gl.disable(gl.BLEND);
+}
+if (lines.length && !S.xray) {
+gl.enable(gl.BLEND);
+gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+gl.depthMask(false);
+gl.depthFunc(gl.GREATER);
+for (const o of lines) drawObj(o, D, 0.5);
+gl.depthFunc(gl.LEQUAL);
+gl.depthMask(true);
+gl.disable(gl.BLEND);
+}
+}
+updateLabels(D);
+}
+function updateLabels(D) {
+const w = canvas.clientWidth, h = canvas.clientHeight, p0 = PM[0], p5 = PM[5];
+const place = (el, p, show) => {
+if (!show) { el.style.display = 'none'; return null; }
+const wp = qRot(S.q, p), vz = wp[2] - D;
+if (vz > -0.05) { el.style.display = 'none'; return null; }
+const x = ((p0 * wp[0]) / -vz * 0.5 + 0.5) * w, y = (0.5 - ((p5 * wp[1]) / -vz) * 0.5) * h;
+el.style.display = '';
+el.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px) translate(-50%, -50%)`;
+return wp[2];
+};
+for (const a of S.atoms) {
+const z = place(a.lbl, a.pos, S.labels);
+if (z !== null) a.lbl.style.opacity = (0.45 + 0.55 * clamp((z + S.R) / (2 * S.R))).toFixed(2);
+}
+const opElem = S.anim ? S.anim.elemIdx : null;
+S.elems.forEach((e, k) => place(e.lbl, e.anchor, e.visible || k === opElem));
+}
+const rotDur = (ang) => 650 + (900 * ang) / Math.PI;
+const degText = (n) => `${Math.round(360 / n)}°`;
+function buildPhases(op) {
+const L = op.label;
+if (op.kind === 'E') return [{ kind: 'pulse', dur: 1000, caption: `${L}: الهوية ${en('(identity)')}، لا تتحرك أي ذرة.` }];
+if (op.kind === 'C') {
+const ang = (2 * Math.PI) / op.n;
+return [{ kind: 'rot', axis: op.dir, ang, dur: rotDur(ang), caption: `${L}: دوران ${en('(rotation)')} بزاوية ${degText(op.n)} حول المحور` }];
+}
+if (op.kind === 'sigma') return [{ kind: 'ref', normal: op.normal, dur: 1300, caption: `${L}: انعكاس ${en('(reflection)')} في المستوى` }];
+if (op.kind === 'i') return [{ kind: 'inv', dur: 1400, caption: `${L}: انقلاب ${en('(inversion)')}، كل ذرة تمر عبر المركز إلى الجهة المقابلة` }];
+const ang = (2 * Math.PI) / op.n;
+return [
+{ kind: 'rot', axis: op.dir, ang, dur: rotDur(ang), caption: `${L}، الخطوة 1 من 2: دوران ${en('(rotation)')} بزاوية ${degText(op.n)} حول المحور` },
+{ kind: 'pause', dur: 1300, caption: '' },
+{ kind: 'ref', normal: op.dir, dur: 1300, caption: `${L}، الخطوة 2 من 2: انعكاس ${en('(reflection)')} في المستوى العمودي على المحور` },
+];
+}
+function nearestSite(p, el) {
+let best = -1, bd = Infinity;
+S.sites.forEach((s, k) => { if (s.el !== el) return; const d = vLen(vSub(p, s.p)); if (d < bd) { bd = d; best = k; } });
+return [best, bd];
+}
+const coincides = () => S.atoms.every((a) => nearestSite(a.pos, a.el)[1] < 0.02);
+function runOp(op, elemIdx) {
+if (S.anim || !S.mol) return;
+hideHint();
+S.inertia = null;
+const phases = buildPhases(op);
+S.anim = { op, elemIdx, phases, k: 0, t0: performance.now(), before: S.atoms.map((a) => a.site), from: S.atoms.map((a) => a.pos.slice()) };
+S.temp = op.kind === 'S' ? planeObjs(op.dir, theme.sn, 1.3, false) : [];
+document.body.classList.add('busy');
+setCaption(phases[0].caption);
+requestRender();
+}
+function stepOp(now) {
+const A = S.anim, ph = A.phases[A.k];
+const t = clamp((now - A.t0) / (ph.dur * SPEED));
+if (ph.kind === 'rot') {
+const q = qAxis(ph.axis, ph.ang * ease(t));
+S.atoms.forEach((a, i) => { a.pos = qRot(q, A.from[i]); });
+} else if (ph.kind === 'ref') {
+const k = 1 - Math.cos(Math.PI * t);
+S.atoms.forEach((a, i) => { const p = A.from[i]; a.pos = vSub(p, vScale(ph.normal, k * vDot(p, ph.normal))); });
+} else if (ph.kind === 'inv') {
+const c = Math.cos(Math.PI * t);
+S.atoms.forEach((a, i) => { a.pos = vScale(A.from[i], c); });
+} else if (ph.kind === 'pulse') {
+S.pulse = Math.sin(Math.PI * t);
+}
+if (t < 1) return;
+S.pulse = 0;
+A.k += 1;
+if (A.k >= A.phases.length) { finishOp(); return; }
+A.t0 = now;
+A.from = S.atoms.map((a) => a.pos.slice());
+const nx = A.phases[A.k];
+if (nx.kind === 'pause') {
+nx.caption = coincides()
+? 'بعد الدوران وحده الشكل مطابق للأصل أيضاً. والآن الانعكاس.'
+: 'لاحظ: بعد الدوران وحده الشكل غير مطابق للأصل. قارنه بالظلال الشفافة.';
+}
+setCaption(nx.caption);
+}
+function finishOp() {
+const A = S.anim;
+const after = S.atoms.map((a) => { const [k, d] = nearestSite(a.pos, a.el); return d < 0.05 ? k : -1; });
+S.atoms.forEach((a, i) => { if (after[i] >= 0) { a.pos = S.sites[after[i]].p.slice(); a.site = after[i]; } });
+const owner = {};
+A.before.forEach((site, i) => { owner[site] = i; });
+const stay = [], moves = [];
+S.atoms.forEach((a, i) => {
+if (after[i] === A.before[i]) stay.push(a.label);
+else if (after[i] >= 0) moves.push([a.label, S.atoms[owner[after[i]]].label]);
+});
+S.last = { label: A.op.label, stay, moves };
+S.anim = null; S.temp = [];
+document.body.classList.remove('busy');
+setCaption(moves.length
+? `✓ ${A.op.label}: الشكل مطابق للأصل، والأرقام تبيّن الذرات التي تبادلت مواقعها.`
+: `✓ ${A.op.label}: الشكل مطابق للأصل، ولم تتحرك أي ذرة.`, 5200);
+renderInfo();
+requestRender();
+}
+function resetNumbering() {
+if (S.anim) return;
+S.atoms.forEach((a, i) => { a.pos = S.sites[i].p.slice(); a.site = i; });
+S.last = null;
+renderInfo();
+setCaption('رجعت كل ذرة إلى موقعها ورقمها الأصليين.', 3000);
+requestRender();
+}
+let capTimer = 0;
+function setCaption(html, ms) {
+clearTimeout(capTimer);
+if (!html) { captionEl.classList.remove('show'); return; }
+captionEl.innerHTML = html;
+captionEl.classList.add('show');
+hideHint();
+if (ms) capTimer = setTimeout(() => captionEl.classList.remove('show'), ms);
+}
+const hideHint = () => hintEl.classList.add('gone');
+const TAB_ORDER = ['bcl3', 'h2o', 'benzene', 'ch4', 'ethane'];
+function renderTabs() {
+tabsEl.innerHTML = TAB_ORDER.map((t) => {
+const m = molFor(t, 'staggered');
+return `<button class="tab" type="button" role="tab" id="tab-${t}" data-tab="${t}" aria-selected="false"><span class="tab-f">${m.formula}</span><span class="tab-n">${m.short}</span></button>`;
+}).join('');
+}
+function classHTML(c) {
+const [coef, l, s, p] = c;
+return `${coef ? `<span class="coef">${coef}</span>` : ''}${sym(l, s || '', p || '')}`;
+}
+function renderPanel() {
+const m = S.mol;
+tabsEl.querySelectorAll('.tab').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.tab === m.tab)));
+const pg = sym(m.pg[0], m.pg[1]);
+molCardEl.innerHTML = `
+<div class="mol-head">
+<div class="formula">${m.formula}</div>
+<div>
+<h2 class="mol-name">${m.nameAr}</h2>
+<p class="mol-sub">${m.shapeAr}</p>
+<p class="mol-sub"><span lang="en" dir="ltr">${m.nameEn} · ${m.shapeEn}</span></p>
+</div>
+</div>
+<div class="pg-line"><span class="pg-label">الزمرة النقطية (point group)</span><span class="pg-sym">${pg}</span><span class="pg-h">h = ${m.order}</span></div>
+<div class="ct-wrap"><table class="ct"><tr><th scope="row">${pg}</th>${m.classes.map((c) => `<td>${classHTML(c)}</td>`).join('')}</tr></table></div>
+<p class="ct-cap">هذا رأس جدول الصفات (character table) لهذه الزمرة: كل عمود صنف من العمليات، والرقم قبله عدد العمليات فيه، ومجموعها h.</p>`;
+if (m.tab === 'ethane') {
+confEl.hidden = false;
+confEl.innerHTML = `
+<div class="conf-head">الهيئة (conformation)</div>
+<div class="seg">
+<button type="button" data-conf="staggered" aria-pressed="${S.conf === 'staggered'}">متعاقبة <small lang="en">staggered · ${sym('D', '3d')}</small></button>
+<button type="button" data-conf="eclipsed" aria-pressed="${S.conf === 'eclipsed'}">متطابقة <small lang="en">eclipsed · ${sym('D', '3h')}</small></button>
+</div>
+<p class="conf-note">الهيئة المتعاقبة أكثر استقراراً، وفيها ${sym('i')} و ${sym('σ', 'd')} و ${sym('S', '6')}. أما المتطابقة ففيها ${sym('σ', 'h')} و ${sym('σ', 'v')} و ${sym('S', '3')} بدلاً منها. بدّل بين الهيئتين وراقب كيف تتغير عناصر التماثل.</p>`;
+} else {
+confEl.hidden = true;
+confEl.textContent = '';
+}
+renderElements();
+renderInfo();
+}
+function famBlock(f, rows, n) {
+const F = FAM[f];
+return `<section class="fam" style="--c:var(${F.cvar})"><h3>${F.head}<span>${F.title}</span><span class="fam-en" lang="en" dir="ltr">${F.en}</span>${n ? `<span class="count">${n}</span>` : ''}</h3><p class="fam-lead">${F.lead}</p>${rows.join('')}</section>`;
+}
+function rowHTML(e) {
+const def = e.def, ops = opsOf(def);
+const num = e.num ? `<span class="num">${e.num}</span>` : '';
+const sub = [def.note, onText(e)].filter(Boolean).join(' · ');
+return `<div class="row${e.idx === S.selected ? ' sel' : ''}" data-idx="${e.idx}" style="--c:var(${colorVar(def)})">`
++ `<button class="vis" type="button" data-act="vis" aria-pressed="${e.visible}" aria-label="إظهار ${plainOf(def)}${e.num ? ' رقم ' + e.num : ''} في الشكل" title="إظهار أو إخفاء في الشكل">${e.visible ? ICON.eye : ICON.eyeOff}</button>`
++ `<button class="name" type="button" data-act="sel"><span class="nm">${symOf(def)}${num}<span class="kind">${biName(kindOf(def))}</span></span><span class="on">${sub}</span></button>`
++ `<div class="ops">${ops.map((op, k) => `<button class="op" type="button" data-act="op" data-k="${k}" aria-label="طبّق العملية ${op.plain}">${ICON.play}${op.label}</button>`).join('')}</div>`
++ `</div>`;
+}
+function renderElements() {
+let html = `<div class="el-head"><h2>عناصر التماثل <span class="h-en" lang="en" dir="ltr">Symmetry elements</span></h2><div class="bulk"><button class="chip-btn" type="button" data-act="all">إظهار الكل</button><button class="chip-btn" type="button" data-act="none">إخفاء الكل</button></div></div>`;
+html += famBlock('E', [
+`<div class="row" style="--c:var(--c-e)"><span class="vis-ph">${ICON.dot}</span><div class="name static"><span class="nm">${sym('E')}<span class="kind">${biName(['الهوية', 'identity'])}</span></span><span class="on">موجود في كل جزيء</span></div><div class="ops"><button class="op" type="button" data-act="opE" aria-label="طبّق العملية E">${ICON.play}${sym('E')}</button></div></div>`,
+]);
+for (const f of ['C', 'sigma', 'i', 'S']) {
+const list = S.elems.filter((e) => e.def.fam === f);
+if (list.length) html += famBlock(f, list.map(rowHTML), list.length);
+}
+elementsEl.innerHTML = html;
+}
+function syncRows() {
+elementsEl.querySelectorAll('[data-idx]').forEach((row) => {
+const e = S.elems[+row.dataset.idx];
+row.classList.toggle('sel', e.idx === S.selected);
+const v = row.querySelector('.vis');
+v.setAttribute('aria-pressed', String(e.visible));
+v.innerHTML = e.visible ? ICON.eye : ICON.eyeOff;
+});
+}
+function renderInfo() {
+const e = S.elems[S.selected];
+let html = '';
+if (!e) {
+html = '<p class="muted">اختر عنصراً من القائمة لتراه في الشكل، ثم اضغط ▶ لتطبيق العملية.</p>';
+} else {
+const def = e.def, ops = opsOf(def);
+const look = def.fam === 'i' ? '' : `<button class="ghost-btn" type="button" data-act="look">${ICON.look}${def.fam === 'sigma' ? 'انظر إلى المستوى من حافته' : 'انظر على امتداد المحور'}</button>`;
+html = `<div class="info-card" style="--c:var(${colorVar(def)})">
+<div class="info-top"><span class="info-sym">${symOf(def)}${e.num ? `<span class="num">${e.num}</span>` : ''}</span><span class="info-names"><span class="info-title">${titleOf(def)[0]}</span><span class="info-en" lang="en" dir="ltr">${titleOf(def)[1]}</span></span></div>
+<p class="info-desc">${def.desc}</p>
+<p class="info-on">${onText(e)}.</p>
+<div class="info-actions">${ops.map((op, k) => `<button class="op" type="button" data-act="op" data-k="${k}" aria-label="طبّق العملية ${op.plain}">${ICON.play}${op.label}</button>`).join('')}${look}</div>
+</div>`;
+}
+if (S.last) html += resultHTML(S.last);
+infoEl.innerHTML = html;
+}
+function resultHTML(r) {
+const stay = r.stay.length ? `: ${bdiList(r.stay)}` : '';
+const moves = r.moves.length
+? `<span class="mvs" dir="ltr">${r.moves.map(([a, b]) => `<span class="mv">${a} → ${b}</span>`).join('')}</span>`
+: 'لا شيء';
+return `<div class="result">
+<div class="result-title">نتيجة آخر عملية: ${r.label}</div>
+<div class="kv"><span class="k">بقيت في مكانها ${en('(unshifted)')}</span><span>${atomsCount(r.stay.length)}${stay}</span><span class="k">انتقلت ${en('(shifted)')}</span><span>${moves}</span></div>
+<p class="tip">السهم يعني أن الذرة انتقلت إلى الموقع الذي كانت فيه الذرة الأخرى. وعدد الذرات التي تبقى في مكانها ستحتاجه لاحقاً عند حساب التمثيل <span class="sym">Γ</span> للاهتزازات (IR و Raman).</p>
+</div>`;
+}
+function select(idx, show) {
+const changed = S.selected !== idx;
+S.selected = idx;
+if (show) S.elems[idx].visible = true;
+if (changed) rebuildElemObjs();
+syncRows();
+renderInfo();
+requestRender();
+}
+function go(m) {
+if (location.hash !== '#' + m.hash) {
+try { location.hash = m.hash; return; } catch (err) { /* load directly below */ }
+}
+loadMolecule(m, !!(S.mol && S.mol.tab === m.tab));
+}
+tabsEl.addEventListener('click', (ev) => {
+const b = ev.target.closest('[data-tab]');
+if (b && b.dataset.tab !== S.tab) go(molFor(b.dataset.tab, S.conf));
+});
+confEl.addEventListener('click', (ev) => {
+const b = ev.target.closest('[data-conf]');
+if (b && b.dataset.conf !== S.conf) go(molFor('ethane', b.dataset.conf));
+});
+window.addEventListener('hashchange', () => {
+const m = molFromHash();
+if (m && m !== S.mol) loadMolecule(m, !!(S.mol && S.mol.tab === m.tab));
+});
+elementsEl.addEventListener('click', (ev) => {
+const b = ev.target.closest('button');
+if (!b) return;
+const act = b.dataset.act;
+if (act === 'all' || act === 'none') { S.elems.forEach((e) => { e.visible = act === 'all'; }); syncRows(); requestRender(); return; }
+if (act === 'opE') { runOp(OP_E, null); return; }
+const row = b.closest('[data-idx]');
+if (!row) return;
+const idx = +row.dataset.idx, e = S.elems[idx];
+if (act === 'vis') { e.visible = !e.visible; syncRows(); requestRender(); }
+else if (act === 'sel') select(idx, true);
+else if (act === 'op') { const op = opsOf(e.def)[+b.dataset.k]; select(idx, true); runOp(op, idx); }
+});
+infoEl.addEventListener('click', (ev) => {
+const b = ev.target.closest('button');
+const e = S.elems[S.selected];
+if (!b || !e) return;
+if (b.dataset.act === 'op') runOp(opsOf(e.def)[+b.dataset.k], S.selected);
+else if (b.dataset.act === 'look') lookAlong(e.def);
+});
+toolbarEl.addEventListener('click', (ev) => {
+const b = ev.target.closest('button');
+if (!b || !S.mol) return;
+const act = b.dataset.act;
+if (act === 'top') { animateView(qOrient([0, 0, 1], [0, 1, 0])); setCaption(`منظر على امتداد ${TOP_NOTE[S.mol.id]}`, 3500); }
+else if (act === 'home') { S.zoom = 1; animateView(homeQuat()); }
+else if (act === 'labels') { S.labels = !S.labels; b.setAttribute('aria-pressed', String(S.labels)); }
+else if (act === 'renumber') resetNumbering();
+else if (act === 'auto') { S.auto = !S.auto; b.setAttribute('aria-pressed', String(S.auto)); }
+else if (act === 'xray') { S.xray = !S.xray; b.setAttribute('aria-pressed', String(S.xray)); }
+requestRender();
+});
+const ptrs = new Map();
+let lastMove = 0, lastAxis = [0, 1, 0], lastAng = 0;
+canvas.addEventListener('pointerdown', (e) => {
+try { canvas.setPointerCapture(e.pointerId); } catch (err) { /* ignore */ }
+ptrs.set(e.pointerId, [e.clientX, e.clientY]);
+dragging = true; S.inertia = null; S.viewAnim = null;
+hideHint();
+});
+canvas.addEventListener('pointermove', (e) => {
+const prev = ptrs.get(e.pointerId);
+if (!prev) return;
+if (ptrs.size === 1) {
+const dx = e.clientX - prev[0], dy = e.clientY - prev[1], ang = Math.hypot(dx, dy) * 0.0085;
+if (ang > 0) {
+lastAxis = [dy, dx, 0]; lastAng = ang; lastMove = performance.now();
+S.q = qNorm(qMul(qAxis(lastAxis, ang), S.q));
+requestRender();
+}
+} else if (ptrs.size === 2) {
+let other = null;
+ptrs.forEach((p, id) => { if (id !== e.pointerId) other = p; });
+const d0 = Math.hypot(prev[0] - other[0], prev[1] - other[1]);
+const d1 = Math.hypot(e.clientX - other[0], e.clientY - other[1]);
+if (d0 > 0 && d1 > 0) setZoom((S.zoom * d0) / d1);
+}
+ptrs.set(e.pointerId, [e.clientX, e.clientY]);
+});
+const endPtr = (e) => {
+if (!ptrs.has(e.pointerId)) return;
+ptrs.delete(e.pointerId);
+if (ptrs.size === 0) {
+dragging = false;
+if (!reduceMotion && performance.now() - lastMove < 60 && lastAng > 0.002) S.inertia = { axis: lastAxis, w: Math.min(lastAng, 0.12) };
+requestRender();
+}
+};
+canvas.addEventListener('pointerup', endPtr);
+canvas.addEventListener('pointercancel', endPtr);
+canvas.addEventListener('lostpointercapture', endPtr);
+viewerEl.addEventListener('wheel', (e) => { e.preventDefault(); setZoom(S.zoom * Math.exp(e.deltaY * 0.0012)); hideHint(); }, { passive: false });
+viewerEl.addEventListener('keydown', (e) => {
+if (e.target !== viewerEl) return;
+const k = e.key;
+let used = true;
+if (k === 'ArrowLeft') rotWorld([0, 1, 0], -0.15);
+else if (k === 'ArrowRight') rotWorld([0, 1, 0], 0.15);
+else if (k === 'ArrowUp') rotWorld([1, 0, 0], -0.15);
+else if (k === 'ArrowDown') rotWorld([1, 0, 0], 0.15);
+else if (k === '+' || k === '=') setZoom(S.zoom / 1.12);
+else if (k === '-' || k === '_') setZoom(S.zoom * 1.12);
+else used = false;
+if (used) { e.preventDefault(); hideHint(); }
+});
+if (window.ResizeObserver) new ResizeObserver(() => { sizeDirty = true; requestRender(); }).observe(viewerEl);
+else window.addEventListener('resize', () => { sizeDirty = true; requestRender(); });
+const onTheme = () => { readTheme(); if (S.mol) { rebuildElemObjs(); requestRender(); } };
+if (window.matchMedia) {
+const mq = window.matchMedia('(prefers-color-scheme: dark)');
+if (mq.addEventListener) mq.addEventListener('change', onTheme); else if (mq.addListener) mq.addListener(onTheme);
+}
+new MutationObserver(onTheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+function loop(now) {
+requestAnimationFrame(loop);
+let active = false;
+if (S.viewAnim) {
+const t = clamp((now - S.viewAnim.t0) / S.viewAnim.dur);
+S.q = qSlerp(S.viewAnim.from, S.viewAnim.to, ease(t));
+if (t >= 1) S.viewAnim = null;
+active = true;
+}
+if (S.inertia && !dragging) {
+S.q = qNorm(qMul(qAxis(S.inertia.axis, S.inertia.w), S.q));
+S.inertia.w *= 0.94;
+if (S.inertia.w < 0.0008) S.inertia = null;
+active = true;
+}
+if (S.auto && !dragging && !S.viewAnim) { S.q = qNorm(qMul(qAxis([0, 1, 0], 0.005), S.q)); active = true; }
+if (S.anim) { stepOp(now); active = true; }
+if (active || needsRender) { needsRender = false; render(); }
+}
+function showNoGL() {
+viewerEl.insertAdjacentHTML('beforeend', '<div class="nogl">هذا المتصفح لا يدعم WebGL، لذلك لا يمكن عرض الشكل ثلاثي الأبعاد. القائمة والشرح يعملان كالمعتاد.</div>');
+canvas.style.visibility = 'hidden';
+labelsEl.style.display = 'none';
+}
+function boot(data) {
+if (data && data.labels === false) S.labels = false;
+if (data && data.auto) S.auto = true;
+if (data && data.xray) S.xray = true;
+toolbarEl.querySelector('[data-act="xray"]').setAttribute('aria-pressed', String(S.xray));
+toolbarEl.querySelector('[data-act="labels"]').setAttribute('aria-pressed', String(S.labels));
+toolbarEl.querySelector('[data-act="auto"]').setAttribute('aria-pressed', String(S.auto));
+readTheme();
+renderTabs();
+if (gl) {
+try { initGL(); } catch (err) { gl = null; prog = null; showNoGL(); }
+canvas.addEventListener('webglcontextlost', (ev) => { ev.preventDefault(); prog = null; showNoGL(); });
+} else showNoGL();
+loadMolecule(molFromHash() || MOLS[0], false);
+requestAnimationFrame(loop);
+}
+const hot = window.claude && window.claude.hot;
+if (hot && typeof hot.snapshot === 'function') hot.snapshot(() => ({ labels: S.labels, auto: S.auto, xray: S.xray }));
+if (hot && typeof hot.ready === 'function') hot.ready(boot);
+else boot((hot && hot.data) || {});
+})();
+</script>
+</body>
+</html>
