@@ -3,6 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="مختبر تفاعلي ثلاثي الأبعاد لعناصر التماثل وعملياته والزمر النقطية (point groups): BCl3 و H2O والبنزين و CH4 و C2H6. إعداد: حسن أبو حشمة.">
+<meta name="author" content="Hasan Hishmeh">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Symmetry Elements &amp; Point Group · Hasan Hishmeh">
+<meta property="og:description" content="مختبر تفاعلي ثلاثي الأبعاد لعناصر التماثل وعملياته والزمر النقطية (point groups): BCl3 و H2O والبنزين و CH4 و C2H6. إعداد: حسن أبو حشمة.">
+<meta property="og:url" content="https://hasanhishmeh03-max.github.io/symmetry-elements-point-group/">
+<meta property="og:locale" content="ar_AR">
+<link rel="canonical" href="https://hasanhishmeh03-max.github.io/symmetry-elements-point-group/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpolygon points='16,4 26.4,10 26.4,22 16,28 5.6,22 5.6,10' fill='none' stroke='%2313212C' stroke-width='2.6'/%3E%3Cline x1='16' y1='0' x2='16' y2='32' stroke='%232B63D9' stroke-width='3'/%3E%3Cline x1='1' y1='16' x2='31' y2='16' stroke='%23D98200' stroke-width='2.2'/%3E%3C/svg%3E">
 <title>Symmetry Elements &amp; Point Group · Hasan Hishmeh</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -973,11 +982,9 @@ mol.elements.forEach((d) => { const k = elKey(d); counts[k] = (counts[k] || 0) +
 S.elems = mol.elements.map((def, idx) => {
 const k = elKey(def);
 seen[k] = (seen[k] || 0) + 1;
-return { def, idx, num: counts[k] > 1 ? seen[k] : 0, visible: true, on: atomsOn(def, mol.atoms), objs: [], anchor: [0, 0, 0], lbl: null };
+return { def, idx, num: counts[k] > 1 ? seen[k] : 0, visible: false, on: atomsOn(def, mol.atoms), objs: [], anchor: [0, 0, 0], lbl: null };
 });
-const pi = S.elems.findIndex((e) => e.def.principal);
-S.selected = pi >= 0 ? pi : 0;
-S.elems[S.selected].visible = true;
+S.selected = -1; // nothing shown until the user picks an element
 S.anim = null; S.temp = []; S.last = null; S.pulse = 0; S.inertia = null; S.viewAnim = null;
 document.body.classList.remove('busy');
 buildSceneObjs();
